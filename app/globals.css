@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-forest: #2D3A3A;
+    --color-cream: #F5F5F0;
+    --color-terracotta: #D96C5B;
+    /* New accent color based on analysis */
+    --color-charcoal: #1A1A1A;
+    --font-heading: 'Outfit', sans-serif;
+    --font-body: 'Inter', sans-serif;
+  }
+
+  body {
+    background-color: var(--color-cream);
+    color: var(--color-charcoal);
+    font-family: var(--font-body);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-terracotta text-white px-8 py-3 rounded-full font-bold uppercase tracking-wider transition-all hover:opacity-90 hover:scale-105 shadow-lg shadow-terracotta/20;
+  }
+
+  .btn-secondary {
+    @apply bg-white text-forest px-8 py-3 rounded-full font-bold uppercase tracking-wider border border-forest/10 transition-all hover:bg-forest hover:text-white;
+  }
+
+  .card-hover {
+    @apply transition-all duration-500 hover:-translate-y-2 hover:shadow-xl;
+  }
+
+  .safe-area-bottom {
+    padding-bottom: constant(safe-area-inset-bottom);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+}

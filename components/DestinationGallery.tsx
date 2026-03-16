@@ -1,0 +1,123 @@
+
+'use client';
+
+import React, { useState } from 'react';
+import { ImageGalleryModal } from './ImageGalleryModal';
+
+interface DestinationGalleryProps {
+    images: any[];
+    destinationName: string;
+    heroImage?: string;
+}
+
+export const DestinationGallery: React.FC<DestinationGalleryProps> = ({ images, destinationName, heroImage }) => {
+    const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+    const [galleryStartIndex, setGalleryStartIndex] = useState(0);
+
+    // Gallery Logic: Prioritize sorted gallery images over static hero_image
+    const sortedImages = images || [];
+    const mainAsset = sortedImages.length > 0
+        ? { url: sortedImages[0].image_url, alt: sortedImages[0].alt_text, tag: sortedImages[0].tags, id: sortedImages[0].id }
+        : { url: heroImage || 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb', alt: destinationName, tag: undefined, id: 'hero' };
+
+    const galleryImages = sortedImages.length > 0
+        ? sortedImages.map((img: any) => ({ url: img.image_url, alt: img.alt_text, tag: img.tags }))
+        : [{ url: mainAsset.url, alt: mainAsset.alt, tag: mainAsset.tag }];
+
+    const openGallery = (index: number) => {
+        setGalleryStartIndex(index);
+        setIsGalleryOpen(true);
+    };
+
+    const getOptimizedUrl = (url: string, width: number) => {
+        if (!url) return '';
+        if (url.includes('images.unsplash.com')) {
+            return url.includes('?') ? `${url}&fm=webp&w=${width}` : `${url}?fm=webp&w=${width}`;
+        }
+        return url;
+    };
+
+    return (
+        <>
+            <ImageGalleryModal
+                isOpen={isGalleryOpen}
+                onClose={() => setIsGalleryOpen(false)}
+                images={galleryImages}
+                initialIndex={galleryStartIndex}
+            />
+
+            <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[80vh] md:h-[65vh] overflow-hidden relative group/gallery">
+                {/* Main Hero Image */}
+                <div
+                    className={`col-span-4 md:col-span-2 row-span-2 relative group cursor-pointer overflow-hidden`}
+                    onClick={() => openGallery(0)}
+                >
+                    <img
+                        src={getOptimizedUrl(mainAsset.url, 1600)}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                        alt={mainAsset.alt}
+                        onError={(e) => {
+                            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?fm=webp&w=1600';
+                        }}
+                    />
+                    <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+
+                    {/* Destination Title Overlay - Added to make it feel like a Hero */}
+                    <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-20 pointer-events-none">
+                        <span className="inline-block px-3 py-1 border border-white/40 rounded-full text-white text-[9px] font-bold uppercase tracking-[0.2em] mb-4 backdrop-blur-sm bg-black/20">
+                            Destination
+                        </span>
+                        <h1 className="text-5xl md:text-7xl font-heading text-white text-shadow-lg leading-tight">
+                            {destinationName}
+                        </h1>
+                    </div>
+
+                    {mainAsset.tag && (
+                        <div className="absolute top-4 left-4 bg-forest/90 backdrop-blur-md text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg z-[30]">
+                            {mainAsset.tag}
+                        </div>
+                    )}
+                </div>
+
+                {/* Sub Images (Start from index 1) */}
+                {sortedImages.slice(1, 5).map((img: any, idx: number) => (
+                    <div
+                        key={img.id}
+                        className="hidden md:block col-span-1 row-span-1 relative group cursor-pointer overflow-hidden"
+                        onClick={() => openGallery(idx + 1)}
+                    >
+                        <img
+                            src={getOptimizedUrl(img.image_url, 800)}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            alt={img.alt_text}
+                            onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                            }}
+                        />
+                        <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+                        {img.tags && (
+                            <div className="absolute top-3 left-3 bg-black/40 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-white/10 shadow-lg z-10">
+                                {img.tags}
+                            </div>
+                        )}
+                    </div>
+                ))}
+
+                {/* Fallback if no gallery images */}
+                {(!images || images.length === 0) && Array.from({ length: 4 }).map((_, i) => (
+                    <div key={i} className="hidden md:block col-span-1 row-span-1 bg-charcoal/5 flex items-center justify-center">
+                        <i className="fas fa-image text-charcoal/10 text-4xl"></i>
+                    </div>
+                ))}
+
+                <button
+                    onClick={() => openGallery(0)}
+                    className="absolute bottom-6 right-6 bg-white border border-charcoal/10 px-5 py-2 rounded-lg shadow-lg flex items-center gap-2 hover:scale-105 transition-transform z-30"
+                >
+                    <i className="fas fa-grid-2 text-xs"></i>
+                    <span className="text-xs font-bold uppercase tracking-widest text-charcoal">Show all photos</span>
+                </button>
+            </div>
+        </>
+    );
+};
