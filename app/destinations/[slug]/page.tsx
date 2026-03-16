@@ -158,14 +158,14 @@ export default async function DestinationDetailPage({ params }: { params: Promis
 
             <DestinationTabs />
 
-            <section className="pb-10 pt-10 bg-cream">
-                <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-24">
+            <section className="pb-8 lg:pb-16 pt-6 lg:pt-14 bg-cream">
+                <div className="container mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
 
                     {/* Main Content Column */}
                     <div className="lg:col-span-8">
 
-                        <div id="overview" className="mb-16 scroll-mt-40">
-                            <h2 className="text-2xl font-bold text-forest mb-8 font-heading">About {dest.name}</h2>
+                        <div id="overview" className="mb-10 lg:mb-16 scroll-mt-24 lg:scroll-mt-40">
+                            <h2 className="text-xl lg:text-2xl font-bold text-forest mb-6 lg:mb-8 font-heading">About {dest.name}</h2>
                             <div className="prose prose-slate prose-lg max-w-none text-gray-600 leading-relaxed space-y-6 whitespace-pre-wrap">
                                 {dest.long_description || dest.description}
                             </div>
@@ -173,8 +173,8 @@ export default async function DestinationDetailPage({ params }: { params: Promis
 
                         {/* Best Time to Visit - Standardized Section */}
                         {bestTime.length > 0 && (
-                            <div id="best-time" className="mb-12 scroll-mt-40">
-                                <h2 className="text-2xl font-bold text-forest mb-6 font-heading">Best Time to visit {dest.name}</h2>
+                            <div id="best-time" className="mb-10 lg:mb-12 scroll-mt-24 lg:scroll-mt-40">
+                                <h2 className="text-xl lg:text-2xl font-bold text-forest mb-5 lg:mb-6 font-heading">Best Time to visit {dest.name}</h2>
                                 <div className="divide-y divide-forest/5 border-t border-forest/5">
                                     {bestTime.map((season: any, idx: number) => (
                                         <div key={idx} className="relative group py-5 overflow-hidden transition-all">
@@ -194,10 +194,10 @@ export default async function DestinationDetailPage({ params }: { params: Promis
 
                         {/* Attractions (Things to Do) */}
                         {thingsToDo.length > 0 && (
-                            <div id="experiences" className="mb-16 scroll-mt-40">
-                                <h3 className="text-2xl font-bold text-forest mb-8 font-heading">Top Experiences in {dest.name}</h3>
+                            <div id="experiences" className="mb-12 lg:mb-16 scroll-mt-24 lg:scroll-mt-40">
+                                <h3 className="text-xl lg:text-2xl font-bold text-forest mb-6 lg:mb-8 font-heading">Top Experiences in {dest.name}</h3>
 
-                                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
                                     {thingsToDo.map((item: any, idx: number) => (
                                         <div
                                             key={idx}
@@ -228,9 +228,9 @@ export default async function DestinationDetailPage({ params }: { params: Promis
 
                         {/* Travel Tips - Concierge Selection */}
                         {dest.travel_tips && dest.travel_tips.length > 0 && (
-                            <div id="travel-tips" className="mb-20 scroll-mt-40">
-                                <div className="flex items-center gap-4 mb-8">
-                                    <h3 className="text-2xl font-bold text-forest font-heading">Concierge Travel Tips</h3>
+                            <div id="travel-tips" className="mb-12 lg:mb-20 scroll-mt-24 lg:scroll-mt-40">
+                                <div className="flex items-center gap-4 mb-6 lg:mb-8">
+                                    <h3 className="text-xl lg:text-2xl font-bold text-forest font-heading">Concierge Travel Tips</h3>
                                     <div className="h-px flex-grow bg-forest/10"></div>
                                 </div>
 
@@ -252,10 +252,10 @@ export default async function DestinationDetailPage({ params }: { params: Promis
                         )}
 
                         {/* Hotels Section */}
-                        <div id="residences" className="mb-10 scroll-mt-40">
-                            <h3 className="text-2xl font-bold text-forest mb-8 font-heading">Our Hotels in {dest.name}</h3>
+                        <div id="residences" className="mb-12 scroll-mt-24 lg:scroll-mt-40">
+                            <h3 className="text-xl lg:text-2xl font-bold text-forest mb-6 lg:mb-8 font-heading">Our Hotels in {dest.name}</h3>
 
-                            <div className="grid grid-cols-1 gap-12">
+                            <div className="grid grid-cols-1 gap-8 lg:gap-12">
                                 {hotels.map((hotel: any, idx: number) => (
                                     <Link key={hotel.id} href={`/hotels/${hotel.slug}`} className="group block bg-white rounded-[2.5rem] md:rounded-[3rem] overflow-hidden border border-forest/5 shadow-2xl hover:shadow-forest/10 transition-all duration-700 hover:-translate-y-2">
                                         <div className="aspect-[4/5] md:aspect-[21/9] relative overflow-hidden">

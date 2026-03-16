@@ -68,18 +68,18 @@ export const DestinationTabs: React.FC = () => {
     };
 
     return (
-        <div className={`hidden lg:block w-full z-40 transition-all duration-300 ${isSticky
-                ? 'fixed top-20 left-0 bg-white/95 backdrop-blur-xl border-b border-forest/10 shadow-sm'
+        <div className={`w-full z-40 transition-all duration-300 ${isSticky
+                ? 'fixed top-16 lg:top-20 left-0 bg-white/95 backdrop-blur-xl border-b border-forest/10 shadow-sm'
                 : 'bg-white border-b border-forest/5'
             }`}>
-            <div className="container mx-auto px-6 overflow-visible h-20">
-                <div className="flex items-center justify-between h-full overflow-visible">
-                    <div className="flex items-center gap-8 h-full">
+            <div className="container mx-auto px-6 overflow-visible h-14 lg:h-20">
+                <div className="flex items-center justify-between h-full overflow-visible gap-4">
+                    <div className="flex items-center gap-6 lg:gap-8 h-full overflow-x-auto no-scrollbar mask-fade-right lg:mask-none">
                         {availableTabs.map((tab) => (
                             <button
                                 key={tab.id}
                                 onClick={() => scrollToSection(tab.id)}
-                                className={`text-[10px] font-bold uppercase tracking-[0.3em] whitespace-nowrap transition-all relative h-full flex items-center ${activeTab === tab.id ? 'text-terracotta' : 'text-forest/60 hover:text-forest'
+                                className={`text-[9px] lg:text-[10px] font-bold uppercase tracking-[0.2em] lg:tracking-[0.3em] whitespace-nowrap transition-all relative h-full flex items-center flex-shrink-0 ${activeTab === tab.id ? 'text-terracotta' : 'text-forest/60 hover:text-forest'
                                     }`}
                             >
                                 {tab.label}
@@ -90,14 +90,14 @@ export const DestinationTabs: React.FC = () => {
                         ))}
                     </div>
 
-                    <div className={`flex items-center h-full transition-all duration-300 ${isSticky ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'}`}>
+                    <div className={`hidden sm:flex items-center h-full transition-all duration-300 ${isSticky ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'}`}>
                         <Button
                             onClick={() => scrollToSection('residences')}
                             variant="primary"
                             size="sm"
-                            className="!shadow-none hover:!translate-y-0"
+                            className="!shadow-none hover:!translate-y-0 py-1.5 px-4 text-[10px]"
                         >
-                            Book Your Stay
+                            Book Stay
                         </Button>
                     </div>
                 </div>

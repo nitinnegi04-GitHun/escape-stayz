@@ -46,7 +46,7 @@ export const DestinationGallery: React.FC<DestinationGalleryProps> = ({ images, 
                 initialIndex={galleryStartIndex}
             />
 
-            <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[80vh] md:h-[65vh] overflow-hidden relative group/gallery">
+            <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[65vh] md:h-[65vh] lg:h-[75vh] overflow-hidden relative group/gallery">
                 {/* Main Hero Image */}
                 <div
                     className={`col-span-4 md:col-span-2 row-span-2 relative group cursor-pointer overflow-hidden`}
@@ -60,20 +60,20 @@ export const DestinationGallery: React.FC<DestinationGalleryProps> = ({ images, 
                             (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?fm=webp&w=1600';
                         }}
                     />
-                    <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
+                    <div className="absolute inset-0 bg-black/15 group-hover:bg-transparent transition-colors"></div>
 
                     {/* Destination Title Overlay - Added to make it feel like a Hero */}
                     <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-20 pointer-events-none">
-                        <span className="inline-block px-3 py-1 border border-white/40 rounded-full text-white text-[9px] font-bold uppercase tracking-[0.2em] mb-4 backdrop-blur-sm bg-black/20">
+                        <span className="inline-block px-3 py-1 border border-white/40 rounded-full text-white text-[8px] md:text-[9px] font-bold uppercase tracking-[0.2em] mb-4 backdrop-blur-sm bg-black/20">
                             Destination
                         </span>
-                        <h1 className="text-5xl md:text-7xl font-heading text-white text-shadow-lg leading-tight">
+                        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-heading text-white text-shadow-lg leading-tight">
                             {destinationName}
                         </h1>
                     </div>
 
                     {mainAsset.tag && (
-                        <div className="absolute top-4 left-4 bg-forest/90 backdrop-blur-md text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg z-[30]">
+                        <div className="absolute top-4 left-4 bg-forest/90 backdrop-blur-md text-white px-3 py-1.5 md:px-4 md:py-2 rounded-full text-[10px] md:text-xs font-bold uppercase tracking-wider shadow-lg z-[30]">
                             {mainAsset.tag}
                         </div>
                     )}
@@ -112,10 +112,10 @@ export const DestinationGallery: React.FC<DestinationGalleryProps> = ({ images, 
 
                 <button
                     onClick={() => openGallery(0)}
-                    className="absolute bottom-6 right-6 bg-white border border-charcoal/10 px-5 py-2 rounded-lg shadow-lg flex items-center gap-2 hover:scale-105 transition-transform z-30"
+                    className="absolute bottom-4 right-4 md:bottom-6 md:right-6 bg-white border border-charcoal/10 px-3 py-1.5 md:px-5 md:py-2 rounded-lg shadow-lg flex items-center gap-2 hover:scale-105 transition-transform z-30"
                 >
-                    <i className="fas fa-grid-2 text-xs"></i>
-                    <span className="text-xs font-bold uppercase tracking-widest text-charcoal">Show all photos</span>
+                    <i className="fas fa-grid-2 text-[10px] md:text-xs"></i>
+                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-charcoal">Photos</span>
                 </button>
             </div>
         </>
