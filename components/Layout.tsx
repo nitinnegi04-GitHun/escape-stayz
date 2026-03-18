@@ -58,7 +58,7 @@ const Header = () => {
   if (!mounted) {
     return (
       <header className={`fixed top-0 left-0 right-0 z-[100] h-16 lg:h-20 w-full ${!isHome ? 'bg-white shadow-md' : 'bg-transparent'}`}>
-        <div className="h-full container mx-auto px-6 flex items-center justify-between" />
+        <div className="h-full w-full max-w-[2400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 flex items-center justify-between" />
       </header>
     );
   }
@@ -68,7 +68,7 @@ const Header = () => {
       <header 
         className={`fixed top-0 left-0 right-0 z-[100] h-16 lg:h-20 w-full transition-colors duration-300 ${isScrolledState ? 'bg-white shadow-md text-forest' : 'bg-transparent text-white'}`}
       >
-        <div className="h-full container mx-auto px-6 flex items-center justify-between relative">
+        <div className="h-full w-full max-w-[2400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 flex items-center justify-between relative">
           
           {/* Logo - Force fixed dimensions to prevent any layout shifts */}
           <Link href="/" className="flex items-center gap-3 relative z-[110] shrink-0">
@@ -193,7 +193,7 @@ const Footer = () => {
   const { settings } = useSettings();
   return (
     <footer className="bg-charcoal text-white pt-24 pb-12 font-body">
-      <div className="container mx-auto px-6 grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-white/5 pb-16 mb-12">
+      <div className="w-full max-w-[2400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 grid grid-cols-1 md:grid-cols-3 gap-12 border-b border-white/5 pb-16 mb-12">
         {/* Brand Section */}
         <div className="space-y-6">
           <Link href="/" className="inline-block">
@@ -254,7 +254,7 @@ const Footer = () => {
         </div>
       </div>
 
-      <div className="container mx-auto px-6 flex flex-col md:flex-row justify-between items-center text-white/30 text-[10px] uppercase tracking-[0.2em] gap-6">
+      <div className="w-full max-w-[2400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 flex flex-col md:flex-row justify-between items-center text-white/30 text-[10px] uppercase tracking-[0.2em] gap-6">
         <p>© {new Date().getFullYear()} {settings.siteName} Luxury Group.</p>
         <div className="flex gap-8">
           <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>

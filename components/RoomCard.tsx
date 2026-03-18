@@ -4,6 +4,7 @@ import React, { useState, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ImageGalleryModal } from './ImageGalleryModal';
 import { Button } from './ui/Button';
+import { useSettings } from '../context/SettingsContext';
 
 interface RoomProps {
     room: {
@@ -18,18 +19,24 @@ interface RoomProps {
         sleeping_arrangements?: string[];
         room_size?: string;
     };
+    hotelName?: string;
 }
 
-export const RoomCard: React.FC<RoomProps> = ({ room }) => {
+export const RoomCard: React.FC<RoomProps> = ({ room, hotelName }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isGalleryOpen, setIsGalleryOpen] = useState(false);
     const cardRef = useRef<HTMLDivElement>(null);
+    const { settings } = useSettings();
+
+    const phone = settings?.contact?.phone?.replace(/\D/g, '') || '';
+    const message = `Hi Team, would Like to Know More about ${room.name} ${hotelName ? `at ${hotelName}` : ''}`;
+    const whatsappLink = phone ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}` : '#';
 
     const { scrollYProgress } = useScroll({
         target: cardRef,
         offset: ["start end", "end start"]
     });
-    
+
     // Parallax effect for the image: moves it slightly slower than the scroll
     const yParallax = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
 
@@ -73,163 +80,153 @@ export const RoomCard: React.FC<RoomProps> = ({ room }) => {
                 initialIndex={currentImageIndex}
             />
 
-            <motion.div 
+            <motion.div
                 ref={cardRef}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="flex flex-col md:flex-row group items-stretch border border-forest/10 hover:bg-forest/[0.02] transition-colors duration-500 rounded-3xl overflow-hidden"
+                className="flex flex-col group items-stretch bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 h-full"
             >
 
-                {/* Image Section - Scaled Down */}
-                <div className="md:w-5/12 w-full relative overflow-hidden shrink-0">
+                {/* Image Section - Top weighted */}
+                <div className="w-full relative overflow-hidden shrink-0">
                     <div
-                        className="h-[250px] md:h-full md:min-h-[300px] w-full rounded-none shadow-2xl shadow-forest/10 relative cursor-pointer"
+                        className="aspect-[4/3] w-full relative cursor-pointer"
                         onClick={() => openGallery(currentImageIndex)}
                     >
-                        {/* Media Display (Image or Video) */}
+                        {/* Media Display */}
                         {galleryImages[currentImageIndex].url.match(/\.(mp4|webm|ogg|mov)$/i) ? (
-                            <motion.video
-                                style={{ y: yParallax, scale: 1.1 }}
+                            <video
                                 src={galleryImages[currentImageIndex].url}
-                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 origin-center"
+                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                                 muted
                                 loop
                                 onMouseOver={e => e.currentTarget.play()}
                                 onMouseOut={e => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
                             />
                         ) : (
-                            <motion.img
-                                style={{ y: yParallax, scale: 1.1 }}
+                            <img
                                 src={galleryImages[currentImageIndex].url}
                                 loading="lazy"
-                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110 origin-center"
+                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
                                 alt={`${room.name} - View ${currentImageIndex + 1}`}
                             />
                         )}
 
-                        {/* Tag Overlay */}
-                        {galleryImages[currentImageIndex].tag && (
-                            <div className="absolute top-6 left-6 bg-black/40 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-white/10 shadow-lg z-10 pointer-events-none">
-                                {galleryImages[currentImageIndex].tag}
+                        {/* Tag/Badge Overlay (Aligned with Site Style) */}
+                        <div className="absolute top-4 left-4 z-10">
+
+                            <span className="absolute top-3 left-3 bg-black/40 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider px-3 py-1.5 rounded-lg border border-white/10 shadow-lg z-10 whitespace-nowrap">
+                                {galleryImages[currentImageIndex]?.tag || (room.name.includes('Balcony') ? 'ROOM - WITH BALCONY' : 'PREMIUM ROOM')}
+                            </span>
+                        </div>
+
+                        {/* Navigation Arrows - Standard Size */}
+                        {galleryImages.length > 1 && (
+                            <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex items-center justify-between z-10 opacity-50 group-hover:opacity-80 transition-opacity duration-300">
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); prevImage(); }}
+                                    className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm text-charcoal shadow-lg hover:bg-white transition-all flex items-center justify-center transform hover:scale-110"
+                                >
+                                    <i className="fas fa-chevron-left text-xs"></i>
+                                </button>
+                                <button
+                                    onClick={(e) => { e.stopPropagation(); nextImage(); }}
+                                    className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm text-charcoal shadow-lg hover:bg-white transition-all flex items-center justify-center transform hover:scale-110"
+                                >
+                                    <i className="fas fa-chevron-right text-xs"></i>
+                                </button>
                             </div>
                         )}
 
-                        {/* Elegant Image Navigation - Visible on Hover */}
+                        {/* Pagination Dots */}
                         {galleryImages.length > 1 && (
-                            <>
-                                <div className="absolute inset-0 flex items-center justify-between px-4 z-10 pointer-events-none">
+                            <div className="absolute bottom-4 left-0 right-0 flex justify-center gap-1.5 z-10">
+                                {galleryImages.map((_, idx) => (
                                     <button
-                                        onClick={(e) => { e.stopPropagation(); prevImage(); }}
-                                        className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md shadow-lg flex items-center justify-center text-forest hover:bg-forest hover:text-white transition-all transform hover:scale-110 pointer-events-auto"
-                                    >
-                                        <i className="fas fa-chevron-left text-xs"></i>
-                                    </button>
-                                    <button
-                                        onClick={(e) => { e.stopPropagation(); nextImage(); }}
-                                        className="w-10 h-10 rounded-full bg-white/90 backdrop-blur-md shadow-lg flex items-center justify-center text-forest hover:bg-forest hover:text-white transition-all transform hover:scale-110 pointer-events-auto"
-                                    >
-                                        <i className="fas fa-chevron-right text-xs"></i>
-                                    </button>
-                                </div>
-
-                                {/* Minimal Dots */}
-                                <div className="absolute bottom-6 left-0 right-0 flex justify-center gap-2 z-10 pointer-events-none">
-                                    {galleryImages.map((_, idx) => (
-                                        <button
-                                            key={idx}
-                                            onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(idx); }}
-                                            className={`w-1.5 h-1.5 rounded-full transition-all shadow-sm pointer-events-auto ${idx === currentImageIndex ? 'bg-white w-4' : 'bg-white/60 hover:bg-white'
-                                                }`}
-                                        />
-                                    ))}
-                                </div>
-                            </>
+                                        key={idx}
+                                        onClick={(e) => { e.stopPropagation(); setCurrentImageIndex(idx); }}
+                                        className={`h-1.5 rounded-full transition-all duration-300 ${idx === currentImageIndex ? 'bg-terracotta w-4' : 'bg-white/40 w-1.5'
+                                            }`}
+                                    />
+                                ))}
+                            </div>
                         )}
-
-                        {/* Zoom Icon Overlay */}
-                        <div className="absolute top-4 right-4 bg-white/20 backdrop-blur-sm p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                            <i className="fas fa-expand-alt text-white"></i>
-                        </div>
                     </div>
                 </div>
 
-                {/* Content Section - Editorial Style */}
-                <div className="md:w-7/12 w-full flex flex-col justify-between p-5 md:p-8 lg:p-10">
+                {/* Content Section */}
+                <div className="w-full flex flex-col p-8 flex-grow bg-white">
 
-                    {/* Header: Name & Capacity */}
-                    <div className="mb-5">
-
-                        <h4 className="text-2xl md:text-3xl font-heading font-bold text-charcoal mb-3 leading-tight group-hover:text-forest transition-colors duration-300">
+                    {/* Room Name & Brief Description */}
+                    <div className="mb-6">
+                        <h4 className="text-l font-bold text-charcoal mb-2 leading-tight ">
                             {room.name}
                         </h4>
-                        <p className="text-charcoal/70 text-sm md:text-base leading-relaxed font-light line-clamp-2 md:line-clamp-none">{room.description}</p>
+                        <p className="text-charcoal/60 text-sm leading-relaxed prose font-light min-h-[30px]">
+                            {room.description}
+                        </p>
                     </div>
 
-                    {/* Amenities - Refactored to Lightweight Text List */}
-                    {room.room_amenities && room.room_amenities.length > 0 && (
-                        <div className="mb-5 border-t border-forest/5 pt-4">
-                            <h5 className="text-forest/70 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-3">Room Amenities</h5>
-                            <ul className="grid grid-cols-2 gap-y-3 gap-x-4">
-                                {room.room_amenities.slice(0, 8).map((item, idx) => (
-                                    <li key={idx} className="flex items-center gap-3 text-charcoal/70 text-sm font-light">
-                                        <i className={`fas ${item.amenity.icon || 'fa-check'} text-forest/40 text-[10px]`}></i>
-                                        <span>{item.amenity.name}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    )}
 
-                    {/* Sleeping Arrangements & Features - Minimal */}
-                    {room.sleeping_arrangements && (
-                        <div className="mb-5 border-t border-forest/5 pt-4">
-                            <h5 className="text-forest/70 font-bold text-[10px] md:text-xs uppercase tracking-widest mb-3">Layout & Design</h5>
-                            <div className="flex flex-wrap gap-x-6 gap-y-3">
-                                <span className="flex items-center gap-2 text-charcoal/70 text-sm font-light">
-                                    <i className="fas fa-user-group text-forest/40 text-[10px]"></i>
-                                    <span>Max {room.max_guests} Guests</span>
+                    {/* Capacity Section - Site Aligned */}
+                    <div className="flex items-center justify-between mb-6 group/capacity">
+                        <div className="flex items-center gap-3">
+                            <div className="w-8 h-8 rounded-full bg-forest/5 flex items-center justify-center shrink-0 transition-colors">
+                                <i className="fas fa-users text-[15px] text-forest/60"></i>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-sm font-medium text-terracotta leading-none mb-1">
+                                    Capacity
                                 </span>
-                                <span className="flex items-center gap-2 text-charcoal/70 text-sm font-light">
-                                    <i className="fas fa-ruler-combined text-forest/40 text-[10px]"></i>
-                                    <span>{room.room_size || 'Spacious Suite'}</span>
+                                <span className="text-[10px]  tracking-wider text-charcoal/40 font-medium">
+                                    {room.max_guests}
                                 </span>
-                                {room.sleeping_arrangements.map((bed, idx) => (
-                                    <span key={idx} className="flex items-center gap-2 text-charcoal/70 text-sm font-light">
-                                        <i className="fas fa-bed text-forest/40 text-[10px]"></i>
-                                        <span>{bed}</span>
-                                    </span>
-                                ))}
                             </div>
                         </div>
-                    )}
-
-
-
-                    {/* Pricing - Simple & Elegant */}
-                    <div className="mt-4 md:mt-auto flex items-end justify-between pt-4 border-t border-forest/5">
-                        <div className="flex flex-col">
-                            <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-charcoal/40 mb-0.5">Starting from</p>
-                            <span className="text-xs text-charcoal/40 line-through font-medium decoration-terracotta/30 mb-0.5">
-                                ₹{Math.round(room.price_per_night * 1.2).toLocaleString()}
+                        <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-100/50">
+                            <i className="fas fa-ruler-combined text-[15px] text-charcoal/40"></i>
+                            <span className="text-sm font-medium text-terracotta">
+                                sq ft  <span className="text-[10px] uppercase ml-0.5 text-charcoal/60">{room.room_size || '180'}</span>
                             </span>
-                            <div className="flex items-baseline gap-1.5 md:gap-2">
-                                <span className="text-2xl md:text-3xl font-heading font-bold text-terracotta whitespace-nowrap">
-                                    ₹{room.price_per_night.toLocaleString()}
+                        </div>
+                    </div>
+
+                    {/* Room Amenities */}
+                    {room.room_amenities && room.room_amenities.length > 0 && (
+                        <div className="flex flex-wrap gap-2 mb-6 pt-2 border-t border-gray-100/50">
+                            {room.room_amenities.slice(0, room.room_amenities.length).map((item, idx) => (
+                                <div key={idx} className="flex items-center gap-1.5 px-2.5 py-1 bg-cream/30 rounded-full border border-forest/5">
+                                    <i className={`${item.amenity?.icon || 'fas fa-check'} text-[10px] text-terracotta opacity-80`}></i>
+                                    <span className="text-[10px] font-medium text-charcoal/70 tracking-wide">{item.amenity?.name}</span>
+                                </div>
+                            ))}
+
+                        </div>
+                    )}
+
+                    {/* Pricing & CTA Stack - Site Aligned */}
+                    <div className="mt-auto flex items-center justify-between">
+                        <div className="flex flex-col">
+                            <p className="text-[10px] uppercase tracking-wider text-charcoal/40 mb-1">Price / Night</p>
+                            <div className="flex items-baseline gap-1">
+                                <span className="text-xl font-bold text-terracotta opacity-80">
+                                    From ₹{room.price_per_night.toLocaleString()}
                                 </span>
-                                <span className="text-[10px] md:text-sm text-charcoal/60 font-medium whitespace-nowrap">/ night</span>
+                                <span className="text-xs text-charcoal/40 italic font-light">/nt</span>
                             </div>
                         </div>
-                        <Button
-                            onClick={() => {
-                                document.getElementById('reservation-sidebar')?.scrollIntoView({ behavior: 'smooth' });
-                            }}
-                            variant="primary"
-                            className="!py-2 !px-4 md:!py-2.5 md:!px-6 text-[10px] md:text-xs shrink-0 self-end mb-1"
+
+                        <a
+                            href={whatsappLink}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="group/btn flex items-center gap-2 bg-[#25D366] text-white px-5 py-2.5 rounded-full hover:bg-[#1EBE5D] transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
                         >
-                            Book Now
-                        </Button>
+                            <span className="font-bold text-xs uppercase tracking-wider">Book Now</span>
+                            <i className="fab fa-whatsapp text-base"></i>
+                        </a>
                     </div>
                 </div>
             </motion.div>

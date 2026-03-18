@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import { cache } from 'react';
 import { Layout } from '../../../components/Layout';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
-import { RoomCard } from '../../../components/RoomCard';
+import { RoomCarousel } from '../../../components/RoomCarousel';
 import { ReservationSidebar } from '../../../components/ReservationSidebar';
 import { HotelGallery } from '../../../components/HotelGallery';
 import { FAQSection } from '../../../components/FAQSection';
@@ -133,13 +133,13 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
 
             <PropertyTabs />
 
-            <section className="pb-0 pt-10 bg-cream">
-                <div className="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-24">
+            <section className="pb-8 lg:pb-16 pt-6 lg:pt-14 bg-cream">
+                <div className="w-full max-w-[2400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 xl:gap-16">
 
                     <div className="lg:col-span-8">
-                        <div id="overview" className="mb-16 scroll-mt-40">
+                        <div id="overview" className="mb-10 lg:mb-16 scroll-mt-24 lg:scroll-mt-40">
                             {/* Short Description */}
-                            <FadeIn delay={0.1} className="mb-12">
+                            <FadeIn delay={0.1} className="mb-8 lg:mb-12">
                                 <p className="text-xl md:text-2xl text-charcoal/80 leading-relaxed font-heading">
                                     {hotel.short_description || `Experience high-altitude luxury at ${hotelName} in ${location}.`}
                                 </p>
@@ -147,8 +147,8 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
 
                             {/* Features & Amenities (Pills) */}
                             {hotel.hotel_amenities && hotel.hotel_amenities.length > 0 && (
-                                <FadeIn delay={0.2} id="amenities" className="mb-12 md:mb-16 scroll-mt-40">
-                                    <h3 className="text-xl md:text-2xl font-bold text-forest mb-6 md:mb-8 font-heading">Hotel Features & Amenities</h3>
+                                <FadeIn delay={0.2} id="amenities" className="mb-10 lg:mb-16 scroll-mt-24 lg:scroll-mt-40">
+                                    <h3 className="text-xl lg:text-2xl font-bold text-forest mb-6 lg:mb-8 font-heading">Hotel Features & Amenities</h3>
                                     <div className="flex flex-wrap gap-2 md:gap-4">
                                         {hotel.hotel_amenities.map((ha: any, idx: number) => (
                                             <div key={idx} className="bg-cream px-3 py-2 md:px-6 md:py-4 rounded-xl md:rounded-2xl flex items-center gap-2 md:gap-3 border border-forest/5 hover:border-forest/20 transition-colors flex-grow-0">
@@ -162,28 +162,24 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
 
                             {/* About the Property (Long Description) */}
                             <FadeIn delay={0.3}>
-                                <h3 className="text-2xl font-bold text-forest mb-8 font-heading">About the Property</h3>
+                                <h3 className="text-xl lg:text-2xl font-bold text-forest mb-6 lg:mb-8 font-heading">About the Property</h3>
                                 <div className="prose prose-slate prose-lg max-w-none text-gray-600 leading-loose space-y-6 whitespace-pre-wrap">
                                     {hotel.full_description}
                                 </div>
                             </FadeIn>
                         </div>
 
-                        {/* Rooms Section */}
                         {hotel.rooms && hotel.rooms.length > 0 && (
-                            <FadeIn delay={0.2} id="rooms" className="mb-20 scroll-mt-40">
-                                <h3 className="text-2xl font-bold text-forest mb-8 font-heading">Our Accommodations</h3>
-                                <div className="grid grid-cols-1 gap-12">
-                                    {hotel.rooms.map((room: any) => (
-                                        <RoomCard key={room.id} room={room} />
-                                    ))}
-                                </div>
-                            </FadeIn>
+                            <div id="rooms" className="mb-12 lg:mb-20 scroll-mt-24 lg:scroll-mt-40">
+                                <FadeIn delay={0.2}>
+                                    <RoomCarousel rooms={hotel.rooms} hotelName={hotel.name} />
+                                </FadeIn>
+                            </div>
                         )}
 
                         {/* Map Section */}
-                        <FadeIn delay={0.4} id="location" className="mb-16 scroll-mt-40">
-                            <h3 className="text-2xl font-bold text-forest mb-8 font-heading">Location & Geography</h3>
+                        <FadeIn delay={0.4} id="location" className="mb-12 lg:mb-16 scroll-mt-24 lg:scroll-mt-40">
+                            <h3 className="text-xl lg:text-2xl font-bold text-forest mb-6 lg:mb-8 font-heading">Location & Geography</h3>
                             <div className="rounded-3xl overflow-hidden shadow-2xl border border-white/20 h-[500px] bg-white/10 backdrop-blur-3xl relative group p-2">
                                 <div className="w-full h-full rounded-2xl overflow-hidden relative">
                                     <iframe
@@ -226,7 +222,7 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
                         </FadeIn>
                     </div>
 
-                    <aside id="reservation-sidebar" className="lg:col-span-4 lg:sticky lg:top-48 self-start mb-20 scroll-mt-48">
+                    <aside id="reservation-sidebar" className="lg:col-span-4 lg:sticky lg:top-48 self-start mb-20 scroll-mt-24 lg:scroll-mt-48">
                         <ReservationSidebar hotelName={hotelName} location={location} />
                     </aside>
                 </div>

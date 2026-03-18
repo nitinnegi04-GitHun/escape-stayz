@@ -95,19 +95,21 @@ export const ReservationSidebar: React.FC<ReservationSidebarProps> = ({ hotelNam
         const formatDate = (d: Date | null) => d ? d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }) : 'Select Date';
         const phone = settings.contact.phone.replace(/[^0-9]/g, ''); // Sanitize phone number (remove all non-numeric characters)
 
-        const message = `Hello! I would like to book a stay at *${hotelName}* in ${location}.%0A%0A🗓 *Dates*: ${formatDate(checkInDate)} - ${formatDate(checkOutDate)}%0A👥 *Guests*: ${adults} Adults, ${children} Children%0A%0APlease confirm availability.`;
+        const message = `Hi Team ! I would like to book a stay at *${hotelName}* in ${location}.%0A%0A🗓 *Dates*: ${formatDate(checkInDate)} - ${formatDate(checkOutDate)}%0A👥 *Guests*: ${adults} Adults, ${children} Children%0A%0APlease confirm availability.`;
 
         window.open(`https://wa.me/${phone}?text=${message}`, '_blank');
     };
 
     return (
-        <motion.div 
+        <motion.div
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="bg-white p-5 lg:p-6 rounded-2xl shadow-2xl shadow-forest/10 border border-forest/5 text-center max-h-[calc(100vh-150px)] overflow-y-auto flex flex-col custom-scrollbar"
+            className="bg-white p-6 lg:p-8 rounded-[2.5rem] shadow-2xl shadow-forest/10 border border-forest/5 text-center max-h-[calc(100vh-150px)] overflow-y-auto flex flex-col custom-scrollbar"
         >
-            <span className="text-xs font-bold uppercase tracking-widest text-terracotta block mb-4">Reservation Deck</span>
+            <div className="flex flex-col items-center mb-8">
+                <span className="text-[15px] font-bold  tracking-[0.3em] text-terracotta mb-2 text-center block w-full">Reservation Desk</span>
+            </div>
 
             {/* Calendar Section */}
             <div className="mb-4">
@@ -188,9 +190,13 @@ export const ReservationSidebar: React.FC<ReservationSidebarProps> = ({ hotelNam
             </div>
 
             {/* Book Now Button */}
-            <Button onClick={handleBookNow} size="sm" className="w-full shrink-0 transition-all">
-                Book Now
-            </Button>
+            <button
+                onClick={handleBookNow}
+                className="w-full shrink-0 group/btn flex items-center justify-center gap-2 bg-[#25D366] text-white px-5 py-3.5 rounded-full hover:bg-[#1EBE5D] transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+            >
+                <i className="fab fa-whatsapp text-lg"></i>
+                <span className="font-bold text-sm uppercase tracking-widest">Send Query on WhatsApp</span>
+            </button>
             <p className="text-[9px] font-bold uppercase tracking-widest text-charcoal/30 italic mt-2 pb-0 shrink-0">Direct booking priority ensured</p>
         </motion.div>
     );

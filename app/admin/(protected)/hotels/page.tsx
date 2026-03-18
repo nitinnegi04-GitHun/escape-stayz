@@ -261,6 +261,64 @@ export default function AdminHotelsPage() {
         );
     };
 
+    const handleDuplicateRoom = async (room: Room) => {
+        if (!currentHotel?.id || !room.id) return;
+
+        if (!confirm(`Are you sure you want to duplicate "${room.name}"?`)) return;
+
+        try {
+            // 1. Fetch source data (Images & Amenities)
+            const { data: sourceImages } = await supabase.from('room_images').select('*').eq('room_id', room.id);
+            const { data: sourceAmenities } = await supabase.from('room_amenities').select('amenity_id').eq('room_id', room.id);
+
+            // 2. Create New Room
+            const newRoomPayload = {
+                ...room,
+                id: undefined, // Let Supabase generate a new ID
+                name: `${room.name} (Copy)`,
+                slug: `${room.slug}-copy-${Math.floor(Math.random() * 1000)}`,
+                hotel_id: currentHotel.id,
+                created_at: new Date().toISOString()
+            };
+
+            const { data: newRoom, error: roomError } = await supabase
+                .from('rooms')
+                .insert(newRoomPayload)
+                .select()
+                .single();
+
+            if (roomError) throw roomError;
+
+            // 3. Duplicate Images
+            if (sourceImages && sourceImages.length > 0) {
+                const imageInserts = sourceImages.map(img => ({
+                    room_id: newRoom.id,
+                    image_url: img.image_url,
+                    alt_text: img.alt_text,
+                    display_order: img.display_order,
+                    tags: img.tags
+                }));
+                const { error: imgError } = await supabase.from('room_images').insert(imageInserts);
+                if (imgError) console.error("Duplicated Room Gallery sync failed:", imgError);
+            }
+
+            // 4. Duplicate Amenities
+            if (sourceAmenities && sourceAmenities.length > 0) {
+                const amenityInserts = sourceAmenities.map(am => ({
+                    room_id: newRoom.id,
+                    amenity_id: am.amenity_id
+                }));
+                const { error: amError } = await supabase.from('room_amenities').insert(amenityInserts);
+                if (amError) console.warn("Duplicated Room Amenities sync failed:", amError.message);
+            }
+
+            fetchRooms(currentHotel.id);
+            alert("Room duplicated successfully!");
+        } catch (err: any) {
+            alert(`Error duplicating room: ${err.message}`);
+        }
+    };
+
     const deleteRoom = async (roomId: string) => {
         if (!confirm("Delete this room?")) return;
         try {
@@ -644,6 +702,13 @@ export default function AdminHotelsPage() {
                                                             <p className="text-xs text-charcoal/50 mt-1">{room.max_guests} Guests • <span className="font-mono text-forest font-bold">₹{room.price_per_night}</span>/night</p>
                                                         </div>
                                                         <div className="flex gap-2">
+                                                            <button 
+                                                                onClick={() => handleDuplicateRoom(room)}
+                                                                title="Duplicate Room"
+                                                                className="w-8 h-8 rounded-lg border border-charcoal/10 text-terracotta hover:bg-terracotta hover:text-white hover:border-terracotta flex items-center justify-center transition-all"
+                                                            >
+                                                                <i className="fas fa-copy text-xs"></i>
+                                                            </button>
                                                             <button onClick={() => {
                                                                 setEditingRoom(room);
                                                                 if (room.id) {

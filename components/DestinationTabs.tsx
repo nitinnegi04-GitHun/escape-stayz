@@ -72,7 +72,7 @@ export const DestinationTabs: React.FC = () => {
                 ? 'fixed top-16 lg:top-20 left-0 bg-white/95 backdrop-blur-xl border-b border-forest/10 shadow-sm'
                 : 'bg-white border-b border-forest/5'
             }`}>
-            <div className="container mx-auto px-6 overflow-visible h-14 lg:h-20">
+            <div className="w-full max-w-[2400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 overflow-visible h-14 lg:h-20">
                 <div className="flex items-center justify-between h-full overflow-visible gap-4">
                     <div className="flex items-center gap-6 lg:gap-8 h-full overflow-x-auto no-scrollbar mask-fade-right lg:mask-none">
                         {availableTabs.map((tab) => (
@@ -88,17 +88,6 @@ export const DestinationTabs: React.FC = () => {
                                 )}
                             </button>
                         ))}
-                    </div>
-
-                    <div className={`hidden sm:flex items-center h-full transition-all duration-300 ${isSticky ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2 pointer-events-none'}`}>
-                        <Button
-                            onClick={() => scrollToSection('residences')}
-                            variant="primary"
-                            size="sm"
-                            className="!shadow-none hover:!translate-y-0 py-1.5 px-4 text-[10px]"
-                        >
-                            Book Stay
-                        </Button>
                     </div>
                 </div>
             </div>

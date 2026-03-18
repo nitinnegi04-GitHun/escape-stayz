@@ -88,13 +88,23 @@ export default async function HomePage() {
     const sections = await getSections(page.id);
     const getSection = (key: string) => sections.find(s => s.section_key === key)?.content || {};
 
+    const heroContent = { ...getSection('hero') };
+    heroContent.cta_link = "#properties";
+
+    const ctaContent = { ...getSection('cta') };
+    ctaContent.heading = "Need Help Planning Your Trip?";
+    ctaContent.subtitle = "From personalized itineraries to complete packages with stays and transport — we’ve got you covered.";
+    ctaContent.button_text = "Connect with Travel Expert";
+    ctaContent.button_link = "whatsapp";
+    ctaContent.whatsappMessage = "Hi Escape Stayz team! I need help planning my trip.";
+
     return (
         <Layout>
-            <Hero {...getSection('hero')} />
+            <Hero {...heroContent} />
             <StorySection {...getSection('story')} />
             <PropertiesSection {...getSection('properties')} />
             <FeaturedDestinations {...getSection('destinations')} destinations={destinations} />
-            <CTASection {...getSection('cta')} />
+            <CTASection {...ctaContent} />
         </Layout>
     );
 }

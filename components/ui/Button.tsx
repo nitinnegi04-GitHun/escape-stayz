@@ -96,6 +96,21 @@ export const Button: React.FC<ButtonProps> = (props) => {
     };
 
     if (href) {
+        if (href.startsWith('#') || href.startsWith('http') || href.startsWith('mailto')) {
+            return (
+                <a
+                    href={href}
+                    target={target}
+                    rel={rel}
+                    onClick={onClick as any}
+                    {...commonProps}
+                    {...(passThroughProps as any)}
+                >
+                    {content}
+                </a>
+            );
+        }
+
         return (
             <Link
                 href={href}

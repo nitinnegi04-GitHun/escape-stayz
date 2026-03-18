@@ -159,7 +159,7 @@ export default async function DestinationDetailPage({ params }: { params: Promis
             <DestinationTabs />
 
             <section className="pb-8 lg:pb-16 pt-6 lg:pt-14 bg-cream">
-                <div className="container mx-auto px-4 sm:px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
+                <div className="w-full max-w-[2400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-24">
 
                     {/* Main Content Column */}
                     <div className="lg:col-span-8">
@@ -369,7 +369,7 @@ export default async function DestinationDetailPage({ params }: { params: Promis
 
             {blogs.length > 0 && (
                 <section className="bg-white py-12">
-                    <div className="container mx-auto px-6">
+                    <div className="w-full max-w-[2400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24">
                         <div className="flex items-end justify-between mb-10">
                             <div>
                                 <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-terracotta mb-2">From the Journal</p>

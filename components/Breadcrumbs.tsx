@@ -14,7 +14,7 @@ interface BreadcrumbsProps {
 export const Breadcrumbs: React.FC<BreadcrumbsProps> = ({ items }) => {
   return (
     <nav className="bg-white border-b border-forest/5 py-4" aria-label="Breadcrumb">
-      <div className="container mx-auto px-6">
+      <div className="w-full max-w-[2400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24">
         <ul className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-widest text-charcoal/40">
           <li>
             <Link href="/" className="hover:text-forest transition-colors">Home</Link>

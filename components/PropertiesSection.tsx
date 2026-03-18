@@ -65,7 +65,7 @@ export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
     if (loading) return <div className="py-24 text-center">Loading Properties...</div>;
 
     return (
-        <section className="py-24 px-6 md:px-12 bg-white relative overflow-x-hidden">
+        <section id="properties" className="py-24 px-6 md:px-12 bg-white relative overflow-x-hidden">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16 max-w-2xl mx-auto">
                     <span className="text-terracotta font-bold uppercase tracking-[0.2em] text-sm block mb-4">{sub_heading}</span>
