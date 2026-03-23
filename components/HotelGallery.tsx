@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Image from 'next/image';
 import { ImageGalleryModal } from './ImageGalleryModal';
 
 interface HotelGalleryProps {
@@ -62,13 +63,13 @@ export const HotelGallery: React.FC<HotelGalleryProps> = ({ images, hotelName, h
                             playsInline
                         />
                     ) : (
-                        <img
-                            src={getOptimizedUrl(mainAsset.url, 1600)}
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                            alt={mainAsset.alt}
-                            onError={(e) => {
-                                (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?fm=webp&w=1600';
-                            }}
+                        <Image
+                            src={getOptimizedUrl(mainAsset.url, 1600) || 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb'}
+                            className="object-cover group-hover:scale-105 transition-transform duration-700"
+                            alt={mainAsset.alt || hotelName}
+                            fill
+                            priority
+                            sizes="(max-width: 768px) 100vw, 50vw"
                         />
                     )}
                     <div className="absolute inset-0 bg-black/15 group-hover:bg-transparent transition-colors"></div>
@@ -114,13 +115,12 @@ export const HotelGallery: React.FC<HotelGalleryProps> = ({ images, hotelName, h
                                 onMouseOut={e => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
                             />
                         ) : (
-                            <img
+                            <Image
                                 src={getOptimizedUrl(img.image_url, 800)}
-                                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
-                                alt={img.alt_text}
-                                onError={(e) => {
-                                    (e.target as HTMLImageElement).style.display = 'none'; // Hide broken sub-images to keep layout clean
-                                }}
+                                className="object-cover group-hover:scale-105 transition-transform duration-700"
+                                alt={img.alt_text || "Hotel View"}
+                                fill
+                                sizes="(max-width: 768px) 50vw, 25vw"
                             />
                         )}
                         <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>

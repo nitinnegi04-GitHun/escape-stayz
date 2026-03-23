@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useRef } from 'react';
+import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { ImageGalleryModal } from './ImageGalleryModal';
 import { Button } from './ui/Button';
@@ -104,11 +105,12 @@ export const RoomCard: React.FC<RoomProps> = ({ room, hotelName }) => {
                                 onMouseOut={e => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
                             />
                         ) : (
-                            <img
-                                src={galleryImages[currentImageIndex].url}
-                                loading="lazy"
-                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                            <Image
+                                src={galleryImages[currentImageIndex].url || placeholder}
+                                className="object-cover transition-transform duration-1000 group-hover:scale-110"
                                 alt={`${room.name} - View ${currentImageIndex + 1}`}
+                                fill
+                                sizes="(max-width: 768px) 100vw, 33vw"
                             />
                         )}
 

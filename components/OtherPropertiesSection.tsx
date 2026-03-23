@@ -2,6 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { supabase } from '../lib/supabase';
 import { HOTEL_ICON_MAP } from './Admin/hotelIcons';
 
@@ -98,11 +99,12 @@ export const OtherPropertiesSection: React.FC<OtherPropertiesSectionProps> = ({ 
                             >
                                 {/* Image — fixed height, no aspect-ratio tricks */}
                                 <div className="relative h-48 overflow-hidden">
-                                    <img
+                                    <Image
                                         src={getImage(hotel)}
                                         alt={hotel.name}
-                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                                        onError={(e) => { (e.target as HTMLImageElement).src = FALLBACK; }}
+                                        className="object-cover group-hover:scale-110 transition-transform duration-700"
+                                        fill
+                                        sizes="(max-width: 768px) 100vw, 33vw"
                                     />
                                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
                                     <div className="absolute bottom-4 left-4 text-white">

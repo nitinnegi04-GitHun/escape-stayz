@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { HOTEL_ICON_MAP } from './Admin/hotelIcons';
 
 interface HotelCardProps {
@@ -37,18 +38,22 @@ export const HotelCard: React.FC<HotelCardProps> = ({ hotel, index = 0, layout =
             {/* Image Section */}
             <Link href={`/hotels/${hotel.slug}`} className="relative aspect-[4/3] overflow-hidden block">
                 {/* Primary Image */}
-                <img
-                    src={getHotelImage(hotel)}
+                <Image
+                    src={getHotelImage(hotel) || '/og-default.jpg'}
                     alt={hotel.name}
-                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                    className="object-cover group-hover:scale-110 transition-transform duration-1000"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
                 />
                 
                 {/* Secondary Image Crossfade */}
                 {hotel.images && hotel.images.length > 1 && (
-                    <img
-                        src={hotel.images[1]?.image_url}
+                    <Image
+                        src={hotel.images[1]?.image_url || '/og-default.jpg'}
                         alt={hotel.images[1]?.alt_text || 'Secondary View'}
-                        className="absolute inset-0 w-full h-full object-cover opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000 z-10"
+                        className="object-cover opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000 z-10"
+                        fill
+                        sizes="(max-width: 768px) 100vw, 33vw"
                     />
                 )}
                 

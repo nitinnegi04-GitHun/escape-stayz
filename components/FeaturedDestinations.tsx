@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface FeaturedDestinationsProps {
     heading?: string;
@@ -59,10 +60,12 @@ export const FeaturedDestinations: React.FC<FeaturedDestinationsProps> = ({
                                     <div className="group cursor-pointer border border-gray-100 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white flex flex-col h-full">
                                         {/* Image Section */}
                                         <Link href={`/destinations/${dest.slug}`} className="relative aspect-[4/3] overflow-hidden block">
-                                            <img
-                                                src={`${dest.hero_image || dest.image_url}${(dest.hero_image || dest.image_url)?.includes('?') ? '&' : '?'}fm=webp&w=800`}
+                                            <Image
+                                                src={`${dest.hero_image || dest.image_url}${(dest.hero_image || dest.image_url)?.includes('?') ? '&' : '?'}fm=webp&w=800` || '/og-default.jpg'}
                                                 alt={dest.name}
-                                                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                                                className="object-cover group-hover:scale-110 transition-transform duration-700"
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, 33vw"
                                             />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-60"></div>
                                             <div className="absolute bottom-6 left-6 text-white group-hover:-translate-y-2 transition-transform duration-300">

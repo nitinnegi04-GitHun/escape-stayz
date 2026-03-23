@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSettings } from '../context/SettingsContext';
 import { supabase } from '../lib/supabase';
+import Image from 'next/image';
 import { Button } from './ui/Button';
 
 const Header = () => {
@@ -82,11 +83,15 @@ const Header = () => {
           <Link href="/" className="flex items-center gap-3 relative z-[110] shrink-0">
             {settings.logoUrl ? (
               <div className="h-8 md:h-10 w-32 md:w-40 flex items-center">
-                <img
-                  src={(isScrolledState && settings.logoUrl2) ? settings.logoUrl2 : settings.logoUrl}
-                  alt={settings.siteName}
-                  className={`h-full w-auto object-contain transition-all duration-300 ${isScrolledState && !settings.logoUrl2 ? 'brightness-0' : ''}`}
-                />
+                <div className="relative w-full h-full flex items-center h-8 md:h-10 w-32 md:w-40">
+                  <Image
+                    src={(isScrolledState && settings.logoUrl2) ? settings.logoUrl2 : settings.logoUrl || '/Escape_Stayz_Transparent.png'}
+                    alt={settings.siteName}
+                    className={`object-contain transition-all duration-300 ${isScrolledState && !settings.logoUrl2 ? 'brightness-0' : ''}`}
+                    fill
+                    priority
+                  />
+                </div>
               </div>
             ) : (
               // Invisible placeholder while settings load — prevents fallback logo from flashing
@@ -197,7 +202,7 @@ const Footer = () => {
         <div className="space-y-6">
           <Link href="/" className="inline-block">
             {settings.logoUrl ? (
-              <img src={settings.logoUrl} alt={settings.siteName} className="h-12 w-auto object-contain brightness-0 invert" />
+              <Image src={settings.logoUrl || '/Escape_Stayz_Transparent.png'} width={160} height={48} alt={settings.siteName} className="h-12 w-auto object-contain brightness-0 invert" />
             ) : (
               <div className="text-2xl font-bold flex items-center gap-3">
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-charcoal">

@@ -6,6 +6,7 @@ import { Layout } from '../../components/Layout';
 import { PageHero } from '../../components/PageHero';
 import { getBlogPosts } from '../../lib/queries';
 import { supabase } from '../../lib/supabase';
+import Image from 'next/image';
 import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from '../../lib/constants';
 
 // Revalidate every hour
@@ -137,10 +138,13 @@ export default async function BlogPage() {
                             {posts.slice(0, 1).map((post: any, idx: number) => (
                                 <article key={post.id || idx} className="group relative grid grid-cols-1 lg:grid-cols-12 gap-0 overflow-hidden rounded-3xl shadow-2xl bg-forest text-white">
                                     <div className="lg:col-span-8 h-[400px] lg:h-[600px] overflow-hidden relative">
-                                        <img
+                                        <Image
                                             src={`${post.featured_image || post.imageUrl || 'https://images.unsplash.com/photo-1626621341517-bbf3d9990a23?auto=format&fit=crop&q=80&w=1200'}`}
-                                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-[1.5s] opacity-90 group-hover:opacity-100"
+                                            className="object-cover group-hover:scale-105 transition-transform duration-[1.5s] opacity-90 group-hover:opacity-100"
                                             alt={post.title}
+                                            fill
+                                            priority
+                                            sizes="(max-width: 1024px) 100vw, 66vw"
                                         />
                                         <div className="absolute top-8 left-8">
                                             <span className="bg-terracotta text-white px-5 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest shadow-lg">
@@ -167,10 +171,12 @@ export default async function BlogPage() {
                                     {posts.slice(1).map((post: any, idx: number) => (
                                         <article key={post.id || idx} className="group flex flex-col h-full">
                                             <Link href={`/blog/${post.slug}`} className="block overflow-hidden rounded-[30px] mb-6 aspect-[4/3] shadow-md relative">
-                                                <img
+                                                <Image
                                                     src={`${post.featured_image || post.imageUrl || 'https://images.unsplash.com/photo-1548678912-41f2375830ff?auto=format&fit=crop&q=80&w=800'}`}
-                                                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1.5s]"
+                                                    className="object-cover group-hover:scale-110 transition-transform duration-[1.5s]"
                                                     alt={post.title}
+                                                    fill
+                                                    sizes="(max-width: 768px) 100vw, 33vw"
                                                 />
                                                 <div className="absolute inset-0 bg-black/10 group-hover:bg-transparent transition-colors"></div>
                                             </Link>

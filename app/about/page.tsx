@@ -4,6 +4,7 @@ import { cache } from 'react';
 import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from '../../lib/constants';
 import { Layout } from '../../components/Layout';
 import { PageHero } from '../../components/PageHero';
+import Image from 'next/image';
 import { supabase } from '../../lib/supabase';
 
 // Revalidate every hour
@@ -151,11 +152,13 @@ export default async function AboutPage() {
                         </div>
 
                         <div className="relative">
-                            <div className="aspect-[4/5] rounded-[60px] overflow-hidden shadow-2xl">
-                                <img
-                                    src={visionContent.image}
-                                    className="w-full h-full object-cover"
+                            <div className="aspect-[4/5] rounded-[60px] overflow-hidden shadow-2xl relative">
+                                <Image
+                                    src={visionContent.image || 'https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9'}
+                                    className="object-cover"
                                     alt="Our story"
+                                    fill
+                                    sizes="(max-width: 1024px) 100vw, 50vw"
                                 />
                             </div>
                             <div className="absolute -bottom-10 -left-10 bg-white p-10 rounded-3xl shadow-2xl hidden lg:block max-w-md">
@@ -164,8 +167,8 @@ export default async function AboutPage() {
                                     "{visionContent.quote}"
                                 </p>
                                 <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden">
-                                        <img src={visionContent.founder_image} alt="CEO" />
+                                    <div className="w-10 h-10 rounded-full bg-gray-200 overflow-hidden relative">
+                                        <Image src={visionContent.founder_image || '/og-default.jpg'} alt="CEO" fill className="object-cover" sizes="40px" />
                                     </div>
                                     <div>
                                         <p className="text-forest font-bold text-xs uppercase tracking-widest">{visionContent.founder_name}</p>

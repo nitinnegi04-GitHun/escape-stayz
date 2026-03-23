@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Image from 'next/image';
 import { Button } from './ui/Button';
 
 interface HeroProps {
@@ -48,10 +49,17 @@ export const Hero: React.FC<HeroProps> = ({
                         <div className="absolute inset-0 bg-black/20"></div>
                     </div>
                 ) : (
-                    <div
-                        className="w-full h-full bg-cover bg-center"
-                        style={{ backgroundImage: `url("${finalImage}")` }}
-                    >
+                    <div className="relative w-full h-full">
+                        {finalImage && (
+                            <Image
+                                src={finalImage}
+                                alt={title || "Hero Background"}
+                                fill
+                                priority
+                                className="object-cover"
+                                sizes="100vw"
+                            />
+                        )}
                         <div className="absolute inset-0 bg-black/20"></div>
                     </div>
                 )}

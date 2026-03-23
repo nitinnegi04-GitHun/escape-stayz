@@ -5,6 +5,7 @@ import { Calendar, Users, Clock, Eye, IndianRupee, MessageCircle, Filter, Send, 
 import emailjs from '@emailjs/browser';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import Image from 'next/image';
 import { Layout } from '../../components/Layout';
 import { itineraries, accommodationRates } from '../../lib/itinerary';
 
@@ -21,11 +22,12 @@ const ItineraryCard: React.FC<{
 }> = ({ itinerary, onViewDetails, onBookNow }) => (
     <div className="bg-white rounded-2xl shadow-md overflow-hidden border border-forest/10 hover:shadow-xl transition-all duration-300 flex flex-col">
         <div className="relative h-52 flex-shrink-0">
-            <img
-                src={itinerary.image}
+            <Image
+                src={itinerary.image || '/og-default.jpg'}
                 alt={itinerary.title}
-                className="w-full h-full object-cover"
-                loading="lazy"
+                className="object-cover"
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/75 to-transparent" />
             <div className="absolute bottom-4 left-4 right-4">
@@ -160,10 +162,13 @@ export default function PlanTripClient() {
 
                 {/* ── Hero ── */}
                 <div className="relative h-[65vh] md:h-screen w-full overflow-hidden">
-                    <img
+                    <Image
                         src="https://res.cloudinary.com/dzsazqbfe/image/upload/v1739812680/Escape%20Inn%20Kaza/ely7xovvoealgmeuaoho.jpg"
                         alt="Spiti Valley Landscape"
-                        className="w-full h-full object-cover"
+                        className="object-cover"
+                        fill
+                        priority
+                        sizes="100vw"
                     />
                     <div className="absolute inset-0 bg-black/50" />
                     <div className="absolute inset-0 flex flex-col justify-center px-6 md:px-12 lg:px-20">
@@ -436,7 +441,7 @@ export default function PlanTripClient() {
                             </button>
 
                             <div className="relative h-72 rounded-t-2xl overflow-hidden">
-                                <img src={selectedItinerary.image} alt={selectedItinerary.title} className="w-full h-full object-cover" />
+                                <Image src={selectedItinerary.image || '/og-default.jpg'} alt={selectedItinerary.title} className="object-cover" fill sizes="(max-width: 768px) 100vw, 800px" />
                                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent" />
                                 <div className="absolute bottom-6 left-6 right-16">
                                     <h2 className="text-2xl font-heading font-bold text-white mb-2 leading-tight">{selectedItinerary.title}</h2>

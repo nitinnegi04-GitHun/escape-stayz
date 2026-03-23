@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState, useCallback, useEffect } from 'react';
+import Image from 'next/image';
 
 interface Experience {
     title: string;
@@ -178,11 +179,12 @@ export const ExperiencesCarousel = ({
 const ExperienceCard = ({ item, heroImage }: { item: Experience; heroImage?: string }) => (
     <div className="group bg-white rounded-3xl overflow-hidden border border-forest/5 shadow-lg shadow-forest/5 hover:border-terracotta/20 transition-all duration-500 flex flex-col h-full">
         <div className="aspect-[4/3] relative overflow-hidden">
-            <img
-                src={item.imageUrl || item.image_url || heroImage || ''}
-                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                alt={item.title}
-                loading="lazy"
+            <Image
+                src={item.imageUrl || item.image_url || heroImage || '/og-default.jpg'}
+                className="object-cover transition-transform duration-700 group-hover:scale-110"
+                alt={item.title || "Experience"}
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
             />
             <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-500" />
             {item.category && (

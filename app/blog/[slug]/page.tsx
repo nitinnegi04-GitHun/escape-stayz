@@ -3,6 +3,7 @@ import { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
+import Image from 'next/image';
 import { Layout } from '../../../components/Layout';
 import { TableOfContents } from '../../../components/TableOfContents';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
@@ -192,7 +193,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
             <section className="relative h-[70vh] min-h-[600px] flex items-center justify-center overflow-hidden bg-charcoal">
                 {post.featured_image ? (
-                    <img src={post.featured_image} className="absolute inset-0 w-full h-full object-cover" alt={post.title} />
+                    <Image src={post.featured_image || '/og-default.jpg'} className="object-cover" alt={post.title} fill priority sizes="100vw" />
                 ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-forest to-charcoal" />
                 )}
@@ -373,11 +374,13 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
                                         return (
                                             <Link href={`/hotels/${hotel.slug}`} key={hotel.id} className="group">
-                                                <div className="aspect-video rounded-3xl overflow-hidden mb-8 shadow-2xl">
-                                                    <img
-                                                        src={optimizedImage}
-                                                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-[2s]"
+                                                <div className="aspect-video rounded-3xl overflow-hidden mb-8 shadow-2xl relative">
+                                                    <Image
+                                                        src={optimizedImage || '/og-default.jpg'}
+                                                        className="object-cover group-hover:scale-110 transition-transform duration-[2s]"
                                                         alt={hotel.name}
+                                                        fill
+                                                        sizes="(max-width: 768px) 100vw, 50vw"
                                                     />
                                                 </div>
                                                 <h4 className="text-3xl font-heading italic group-hover:text-forest transition-colors">{hotel.name}</h4>

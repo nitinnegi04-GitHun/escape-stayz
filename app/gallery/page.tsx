@@ -1,5 +1,6 @@
 
 import { Metadata } from 'next';
+import Image from 'next/image';
 import { Layout } from '../../components/Layout';
 import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from '../../lib/constants';
 
@@ -59,7 +60,7 @@ export default function GalleryPage() {
                     <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
                         {GALLERY_IMAGES.map((img, idx) => (
                             <div key={idx} className="break-inside-avoid rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all group">
-                                <img src={img} className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500" alt={`Escape Stayz property gallery image ${idx + 1}`} />
+                                <Image src={img} width={800} height={1000} className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500" alt={`Escape Stayz property gallery image ${idx + 1}`} />
                             </div>
                         ))}
                     </div>

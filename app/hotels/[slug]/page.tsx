@@ -255,6 +255,7 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
                                         style={{ border: 0, filter: 'contrast(1.1) opacity(0.9) grayscale(0.2)' }}
                                         src={hotel.google_maps_embed_url || `https://www.google.com/maps?q=${lat},${lng}&hl=en;z=14&output=embed`}
                                         allowFullScreen
+                                        loading="lazy"
                                         className="w-full h-full"
                                     ></iframe>
                                     <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-charcoal/10 rounded-2xl"></div>

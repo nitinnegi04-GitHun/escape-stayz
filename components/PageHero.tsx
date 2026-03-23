@@ -2,6 +2,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
+import Image from 'next/image';
 
 interface PageHeroProps {
     title: string;
@@ -28,13 +29,20 @@ export const PageHero: React.FC<PageHeroProps> = ({
         <div className={`relative ${height} w-full overflow-hidden`}>
             {/* Dynamic Background */}
             <div
-                className="absolute inset-0 bg-cover bg-center"
+                className="absolute inset-0"
                 style={{
-                    backgroundImage: `url("${image}")`,
                     transform: `scale(${1 + scrollY * 0.0005}) translateY(${scrollY * 0.2}px)`
                 }}
             >
-                <div className="absolute inset-0 bg-black/40"></div>
+                <Image
+                    src={image || '/og-default.jpg'}
+                    alt={title || "Hero Image"}
+                    className="object-cover"
+                    fill
+                    priority
+                    sizes="100vw"
+                />
+                <div className="absolute inset-0 bg-black/40 z-10"></div>
             </div>
 
             {/* Content */}

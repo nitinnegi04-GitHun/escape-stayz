@@ -1,6 +1,7 @@
 
 import { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { cache } from 'react';
 import { Layout } from '../../../components/Layout';
@@ -205,10 +206,12 @@ export default async function DestinationDetailPage({ params }: { params: Promis
                                             className="group bg-white rounded-[2.5rem] overflow-hidden border border-forest/5 shadow-lg shadow-forest/5 hover:border-terracotta/20 transition-all duration-500 h-full flex flex-col"
                                         >
                                             <div className="aspect-[4/3] relative overflow-hidden">
-                                                <img
-                                                    src={getOptimizedUrl(item.imageUrl || item.image_url || dest.image_url, 600)}
-                                                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                                    alt={item.title}
+                                                <Image
+                                                    src={getOptimizedUrl(item.imageUrl || item.image_url || dest.image_url, 600) || '/og-default.jpg'}
+                                                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                                                    alt={item.title || "Experience"}
+                                                    fill
+                                                    sizes="(max-width: 768px) 100vw, 33vw"
                                                 />
                                                 <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors duration-500" />
                                                 {(item.category || item.tags?.[0]) && (
@@ -260,13 +263,13 @@ export default async function DestinationDetailPage({ params }: { params: Promis
                                 {hotels.map((hotel: any, idx: number) => (
                                     <Link key={hotel.id} href={`/hotels/${hotel.slug}`} className="group block bg-white rounded-[2.5rem] md:rounded-[3rem] overflow-hidden border border-forest/5 shadow-2xl hover:shadow-forest/10 transition-all duration-700 hover:-translate-y-2">
                                         <div className="aspect-[4/5] md:aspect-[21/9] relative overflow-hidden">
-                                            <div className="w-full h-full transition-transform duration-[1.5s] group-hover:scale-105">
-                                                <img
-                                                    src={getOptimizedUrl(hotel.hero_image || hotel.images?.[0]?.image_url, 1200) || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80'}
-                                                    className="w-full h-full object-cover"
-                                                    alt={hotel.name}
-                                                />
-                                            </div>
+                                            <Image
+                                                src={getOptimizedUrl(hotel.hero_image || hotel.images?.[0]?.image_url, 1200) || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80'}
+                                                className="object-cover transition-transform duration-[1.5s] group-hover:scale-105"
+                                                alt={hotel.name || "Hotel"}
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, 100vw"
+                                            />
                                             <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent opacity-70 group-hover:opacity-80 transition-opacity duration-500"></div>
 
                                             <div className="absolute top-6 right-6 md:top-8 md:right-8 bg-white/95 backdrop-blur-md px-4 py-2 md:px-6 md:py-3 rounded-xl md:rounded-2xl shadow-xl z-20 border border-white/20 transform rotate-3 group-hover:rotate-0 transition-transform duration-500">
@@ -390,10 +393,12 @@ export default async function DestinationDetailPage({ params }: { params: Promis
                                 >
                                     <div className="aspect-[4/3] relative overflow-hidden bg-charcoal/5">
                                         {post.featured_image ? (
-                                            <img
-                                                src={getOptimizedUrl(post.featured_image, 600)}
-                                                alt={post.title}
-                                                className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                                            <Image
+                                                src={getOptimizedUrl(post.featured_image, 600) || '/og-default.jpg'}
+                                                alt={post.title || "Blog Post"}
+                                                className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                                fill
+                                                sizes="(max-width: 768px) 100vw, 25vw"
                                             />
                                         ) : (
                                             <div className="w-full h-full bg-gradient-to-br from-forest/10 to-terracotta/10 flex items-center justify-center">

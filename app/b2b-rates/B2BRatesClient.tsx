@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Handshake, MapPin, Users, Mountain, Shield, Calendar, Clock } from 'lucide-react';
 
 // ── Types ──────────────────────────────────────────────────────────────────────
@@ -202,10 +203,12 @@ export default function B2BRatesClient() {
                 {/* ── Header ── */}
                 <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
                     <Link href="/">
-                        <img
+                        <Image
                             src="https://res.cloudinary.com/dzsazqbfe/image/upload/c_crop,w_400,h_200/v1739965913/Escape_Stayz_Transparent_ziqhph.png"
                             alt="EscapeStayz Logo"
-                            className="h-16 w-auto"
+                            className="h-16 w-auto object-contain"
+                            width={160}
+                            height={64}
                         />
                     </Link>
                     <h1 className="text-2xl md:text-3xl font-heading font-bold text-forest">B2B Partner Rates</h1>
@@ -426,10 +429,12 @@ export default function B2BRatesClient() {
                 {/* ── Footer ── */}
                 <div className="mt-16 pt-8 border-t border-forest/10 text-center">
                     <Link href="/">
-                        <img
+                        <Image
                             src="https://res.cloudinary.com/dzsazqbfe/image/upload/c_crop,w_400,h_200/v1739965913/Escape_Stayz_Transparent_ziqhph.png"
                             alt="EscapeStayz Logo"
-                            className="h-12 w-auto mx-auto mb-4 opacity-70 hover:opacity-100 transition-opacity"
+                            className="h-12 w-auto mx-auto mb-4 opacity-70 hover:opacity-100 transition-opacity object-contain"
+                            width={120}
+                            height={48}
                         />
                     </Link>
                     <p className="text-charcoal/40 text-sm">
