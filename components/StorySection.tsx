@@ -2,6 +2,7 @@
 'use client';
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface StorySectionProps {
     headline?: string;
@@ -33,10 +34,12 @@ export const StorySection: React.FC<StorySectionProps> = ({ headline, heading, b
                     <div className="relative h-[450px] md:h-[550px] w-full">
                         {/* Main large image */}
                         <div className="absolute inset-0 w-full h-full rounded-3xl overflow-hidden shadow-2xl z-10">
-                            <img
-                                src={image}
+                            <Image
+                                src={image || '/og-default.jpg'}
                                 alt={heading}
-                                className="w-full h-full object-cover"
+                                className="object-cover"
+                                fill
+                                sizes="(max-width: 768px) 100vw, 50vw"
                             />
                             <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent"></div>
                         </div>
