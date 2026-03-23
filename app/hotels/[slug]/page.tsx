@@ -14,7 +14,6 @@ import { getHotelBySlug, getExperiencesByDestinationSlug } from '../../../lib/qu
 import { supabase } from '../../../lib/supabase';
 import { PropertyTabs } from '@/components/PropertyTabs';
 import { HOTEL_ICON_MAP } from '@/components/Admin/hotelIcons';
-import { MobileReservationPopup } from '@/components/MobileReservationPopup';
 import { DirectBookingPopup } from '@/components/DirectBookingPopup';
 import { OtherPropertiesSection } from '@/components/OtherPropertiesSection';
 import { SITE_URL, SITE_NAME } from '../../../lib/constants';
@@ -328,7 +327,6 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
                 <FAQSection faqs={hotel.faqs} />
             </div>
 
-            <MobileReservationPopup hotelName={hotelName} location={location} />
             <DirectBookingPopup />
         </Layout>
     );
