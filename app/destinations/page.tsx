@@ -6,6 +6,7 @@ import { Layout } from '../../components/Layout';
 import { PageHero } from '../../components/PageHero';
 import { getDestinations } from '../../lib/queries';
 import { supabase } from '../../lib/supabase';
+import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from '../../lib/constants';
 
 import { Breadcrumbs } from '../../components/Breadcrumbs';
 
@@ -38,21 +39,23 @@ export async function generateMetadata(): Promise<Metadata> {
     return {
         title,
         description,
+        alternates: {
+            canonical: `${SITE_URL}/destinations`,
+        },
         openGraph: {
             title,
             description,
             type: 'website',
-            url: 'https://escapestayz.com/destinations',
-            siteName: 'Escape Stayz',
+            url: `${SITE_URL}/destinations`,
+            siteName: SITE_NAME,
+            images: [SITE_OG_IMAGE],
         },
         twitter: {
             card: 'summary_large_image',
             title,
             description,
+            images: [SITE_OG_IMAGE],
         },
-        alternates: {
-            canonical: 'https://escapestayz.com/destinations',
-        }
     };
 }
 
@@ -86,8 +89,8 @@ export default async function DestinationsPage() {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://escapestayz.com/" },
-            { "@type": "ListItem", "position": 2, "name": "Destinations", "item": "https://escapestayz.com/destinations" }
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
+            { "@type": "ListItem", "position": 2, "name": "Destinations", "item": `${SITE_URL}/destinations` }
         ]
     };
 

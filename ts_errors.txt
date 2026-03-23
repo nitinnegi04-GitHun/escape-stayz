@@ -1,0 +1,23 @@
+.next/types/routes.d 3.ts(58,13): error TS2428: All declarations of 'PageProps' must have identical type parameters.
+.next/types/routes.d 3.ts(59,5): error TS2717: Subsequent property declarations must have the same type.  Property 'params' must be of type 'Promise<ParamMap[AppRoute]>', but here has type 'Promise<ParamMap[AppRoute]>'.
+.next/types/routes.d 3.ts(59,21): error TS2536: Type 'AppRoute' cannot be used to index type 'ParamMap'.
+.next/types/routes.d 3.ts(72,8): error TS2300: Duplicate identifier 'LayoutProps'.
+app/_plan-your-trip/page.tsx(5,10): error TS2614: Module '"../../components/TripPlanner"' has no exported member 'TripPlanner'. Did you mean to use 'import TripPlanner from "../../components/TripPlanner"' instead?
+components/Admin/hotelIcons.ts(137,36): error TS2802: Type 'Set<string>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+components/Admin/IconRegistry.tsx(119,28): error TS2802: Type 'Set<string>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+components/TripPlanner.tsx(2,24): error TS2307: Cannot find module 'react-helmet-async' or its corresponding type declarations.
+components/TripPlanner.tsx(7,49): error TS2307: Cannot find module '../data/itineraries' or its corresponding type declarations.
+components/TripPlanner.tsx(53,60): error TS7006: Parameter 'highlight' implicitly has an 'any' type.
+components/TripPlanner.tsx(53,71): error TS7006: Parameter 'index' implicitly has an 'any' type.
+components/TripPlanner.tsx(145,52): error TS7006: Parameter 'itinerary' implicitly has an 'any' type.
+components/TripPlanner.tsx(289,50): error TS7006: Parameter 'rate' implicitly has an 'any' type.
+components/TripPlanner.tsx(340,51): error TS7006: Parameter 'itinerary' implicitly has an 'any' type.
+components/TripPlanner.tsx(548,72): error TS7006: Parameter 'highlight' implicitly has an 'any' type.
+components/TripPlanner.tsx(548,83): error TS7006: Parameter 'index' implicitly has an 'any' type.
+components/TripPlanner.tsx(560,75): error TS7006: Parameter 'day' implicitly has an 'any' type.
+components/TripPlanner.tsx(578,76): error TS7006: Parameter 'inclusion' implicitly has an 'any' type.
+components/TripPlanner.tsx(578,87): error TS7006: Parameter 'index' implicitly has an 'any' type.
+components/TripPlanner.tsx(590,76): error TS7006: Parameter 'exclusion' implicitly has an 'any' type.
+components/TripPlanner.tsx(590,87): error TS7006: Parameter 'index' implicitly has an 'any' type.
+components/TripPlanner.tsx(603,67): error TS7006: Parameter 'note' implicitly has an 'any' type.
+components/TripPlanner.tsx(603,73): error TS7006: Parameter 'index' implicitly has an 'any' type.

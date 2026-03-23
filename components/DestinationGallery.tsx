@@ -115,7 +115,7 @@ export const DestinationGallery: React.FC<DestinationGalleryProps> = ({ images, 
                     className="absolute bottom-4 right-4 md:bottom-6 md:right-6 bg-white border border-charcoal/10 px-3 py-1.5 md:px-5 md:py-2 rounded-lg shadow-lg flex items-center gap-2 hover:scale-105 transition-transform z-30"
                 >
                     <i className="fas fa-grid-2 text-[10px] md:text-xs"></i>
-                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-charcoal">Photos</span>
+                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-charcoal">View All Photos</span>
                 </button>
             </div>
         </>

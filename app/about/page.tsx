@@ -1,6 +1,7 @@
 
 import { Metadata } from 'next';
 import { cache } from 'react';
+import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from '../../lib/constants';
 import { Layout } from '../../components/Layout';
 import { PageHero } from '../../components/PageHero';
 import { supabase } from '../../lib/supabase';
@@ -34,15 +35,23 @@ export async function generateMetadata(): Promise<Metadata> {
     return {
         title,
         description,
+        alternates: {
+            canonical: `${SITE_URL}/about`,
+        },
         openGraph: {
             title,
             description,
             type: 'website',
-            url: 'https://escapestayz.com/about',
+            url: `${SITE_URL}/about`,
+            siteName: SITE_NAME,
+            images: [SITE_OG_IMAGE],
         },
-        alternates: {
-            canonical: 'https://escapestayz.com/about',
-        }
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: [SITE_OG_IMAGE],
+        },
     };
 }
 
@@ -79,14 +88,28 @@ export default async function AboutPage() {
         if (fetchedVision.heading) visionContent = fetchedVision;
     }
 
-    const aboutSchema = {
-        "@context": "https://schema.org",
-        "@type": "BreadcrumbList",
-        "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://escapestayz.com/" },
-            { "@type": "ListItem", "position": 2, "name": "About Us", "item": "https://escapestayz.com/about" }
-        ]
-    };
+    const aboutSchema = [
+        {
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            "itemListElement": [
+                { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
+                { "@type": "ListItem", "position": 2, "name": "About Us", "item": `${SITE_URL}/about` }
+            ]
+        },
+        {
+            "@context": "https://schema.org",
+            "@type": "AboutPage",
+            "name": `About ${SITE_NAME}`,
+            "url": `${SITE_URL}/about`,
+            "description": "Learn about the vision and legacy of Escape Stayz – redefined Himalayan luxury.",
+            "publisher": {
+                "@type": "Organization",
+                "name": SITE_NAME,
+                "url": SITE_URL
+            }
+        }
+    ];
 
     return (
         <Layout>

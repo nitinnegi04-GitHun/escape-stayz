@@ -25,7 +25,7 @@ export const getHotelBySlug = async (slug: string) => {
     .from('hotels')
     .select(`
       *,
-      rooms(*, images:room_images(*), room_amenities(amenity:amenities(name, icon)), sleeping_arrangements),
+      rooms(*, images:room_images(*), room_amenities(amenity:amenities(name, icon))),
       images:hotel_images(*),
       hotel_amenities(
         amenity:amenities(name, icon)
@@ -90,6 +90,16 @@ export const getBlogPostBySlug = async (slug: string) => {
     .eq('slug', slug)
     .single();
   if (error) throw error;
+  return data;
+};
+
+export const getExperiencesByDestinationSlug = async (destinationSlug: string) => {
+  const { data, error } = await supabase
+    .from('destinations')
+    .select('name, things_to_do')
+    .eq('slug', destinationSlug)
+    .single();
+  if (error) return null;
   return data;
 };
 

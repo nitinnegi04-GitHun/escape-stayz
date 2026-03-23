@@ -15,7 +15,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ faqs, ctaTarget = 'reser
     if (!faqs || faqs.length === 0) return null;
 
     return (
-        <section className="py-12 lg:py-24 pt-0 bg-cream relative overflow-hidden">
+        <section className="py-12 lg:py-24 bg-cream relative overflow-hidden">
             <div className="container mx-auto px-6">
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-start">
                     {/* Left Column */}
@@ -53,7 +53,7 @@ export const FAQSection: React.FC<FAQSectionProps> = ({ faqs, ctaTarget = 'reser
                                     className={`grid transition-all duration-300 ease-in-out ${openFaqIndex === idx ? 'grid-rows-[1fr] opacity-100 mt-4' : 'grid-rows-[0fr] opacity-0'}`}
                                 >
                                     <div className="overflow-hidden">
-                                        <p className="text-charcoal/70 leading-relaxed font-body text-base border-t border-forest/5 pt-4">
+                                        <p className="text-charcoal/60 leading-relaxed font-body text-base border-t border-forest/5 pt-4">
                                             {faq.answer}
                                         </p>
                                     </div>

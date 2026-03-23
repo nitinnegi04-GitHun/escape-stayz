@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
+import { HOTEL_ICON_MAP } from './Admin/hotelIcons';
 
 interface HotelCardProps {
     hotel: any;
@@ -20,25 +20,19 @@ export const HotelCard: React.FC<HotelCardProps> = ({ hotel, index = 0, layout =
     };
 
     const getHotelImage = (hotel: any) => {
-        // Handle both relational images (from query) and direct imageUrl (from some old data structures)
+        // thumbnail_image is the dedicated card thumbnail, set from admin panel
+        if (hotel.thumbnail_image) return hotel.thumbnail_image;
         if (hotel.imageUrl) return hotel.imageUrl;
-        if (hotel.hero_image) return hotel.hero_image;
         if (hotel.images && hotel.images.length > 0) return hotel.images[0].image_url;
         return 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?fm=webp&w=800'; // Fallback
     };
 
     const containerClasses = layout === 'carousel' 
         ? "group cursor-pointer border border-forest/5 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white flex flex-col min-w-full md:min-w-[380px] snap-center flex-shrink-0"
-        : "group cursor-pointer border border-gray-100 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white flex flex-col h-full";
+        : "group cursor-pointer border border-forest/5 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white flex flex-col h-full";
 
     return (
-        <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.6, delay: layout === 'grid' ? 0 : index * 0.1 }}
-            className={containerClasses}
-        >
+        <div className={containerClasses}>
 
             {/* Image Section */}
             <Link href={`/hotels/${hotel.slug}`} className="relative aspect-[4/3] overflow-hidden block">
@@ -76,42 +70,37 @@ export const HotelCard: React.FC<HotelCardProps> = ({ hotel, index = 0, layout =
                 </div>
             </Link>
 
-            <div className="p-8 flex flex-col flex-grow relative bg-white">
-                <div className="flex justify-between items-center mb-4 text-sm text-charcoal/60 border-b border-forest/5 pb-4">
-                    <div className="flex items-center gap-2 text-terracotta font-medium line-clamp-1">
-                        {hotel.hotel_amenities && hotel.hotel_amenities.length > 0 ? (
-                            <>
-                                <i className={`fas ${hotel.hotel_amenities[0].amenity?.icon || 'fa-star'}`}></i>
-                                <span className="truncate max-w-[120px]">{hotel.hotel_amenities[0].amenity?.name || 'Refined Luxury'}</span>
-                            </>
-                        ) : (
-                            <>
-                                <i className="fas fa-star text-xs"></i>
-                                <span>{hotel.rating || '5.0'} / 5.0</span>
-                            </>
-                        )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <span className="font-bold text-terracotta text-lg">
-                            ₹{getMinPrice(hotel.rooms)}
-                            <span className="text-charcoal/40 font-normal text-xs ml-1 font-sans italic">/nt</span>
-                        </span>
-                    </div>
+            <div className="p-6 flex flex-col flex-grow relative bg-white">
+
+                {/* Price */}
+                <div className="flex items-baseline gap-1 mb-3 pb-3 border-b border-forest/5">
+                    <p className="text-[10px] font-bold uppercase tracking-widest text-charcoal/40 mr-1">From</p>
+                    <span className="text-xl font-bold text-terracotta">₹{getMinPrice(hotel.rooms)}</span>
+                    <span className="text-xs text-charcoal/40 italic font-light">/night</span>
                 </div>
 
-                <p className="text-charcoal/60 mb-6 line-clamp-3 text-sm leading-relaxed font-light">
+                {/* Short Description */}
+                <p className="text-charcoal/60 mb-4 line-clamp-2 text-sm leading-relaxed font-light">
                     {hotel.short_description || hotel.description || hotel.full_description}
                 </p>
 
-                <div className="mt-auto flex justify-between items-center">
-                    <div className="flex gap-2 flex-wrap">
-                        {/* Render raw amenities strings or properly structured ones depending on the data shape passed in */}
-                        {(hotel.amenities || []).slice(0, 2).map((amenity: any, idx: number) => (
-                            <span key={idx} className="px-2 py-1 bg-forest/5 rounded text-[9px] font-bold uppercase tracking-wider text-forest/60">
-                                {typeof amenity === 'string' ? amenity : amenity.name}
-                            </span>
-                        ))}
+                {/* All Highlights */}
+                {hotel.highlights && hotel.highlights.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-5">
+                        {hotel.highlights.map((hl: { icon: string; text: string }, idx: number) => {
+                            const IC = HOTEL_ICON_MAP[hl.icon];
+                            return (
+                                <div key={idx} className="flex items-center gap-1.5 px-2.5 py-1.5 bg-cream rounded-xl border border-forest/5 flex-shrink-0">
+                                    {IC ? <IC size={11} className="text-terracotta flex-shrink-0" /> : null}
+                                    <span className="text-[10px] font-bold text-charcoal/70 whitespace-nowrap">{hl.text}</span>
+                                </div>
+                            );
+                        })}
                     </div>
+                )}
+
+                {/* Details CTA */}
+                <div className="mt-auto flex justify-end">
                     <Link href={`/hotels/${hotel.slug}`} className="group/btn flex items-center gap-3">
                         <span className="text-terracotta font-bold text-sm uppercase tracking-wider">Details</span>
                         <div className="w-10 h-10 rounded-full bg-terracotta flex items-center justify-center transition-all duration-300 group-hover/btn:scale-110 shadow-md">
@@ -120,6 +109,6 @@ export const HotelCard: React.FC<HotelCardProps> = ({ hotel, index = 0, layout =
                     </Link>
                 </div>
             </div>
-        </motion.div>
+        </div>
     );
 };

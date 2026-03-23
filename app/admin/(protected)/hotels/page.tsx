@@ -5,6 +5,14 @@ import React, { useEffect, useState } from 'react';
 import { GallerySelector } from '../../../../components/Admin/GallerySelector';
 import { supabase } from '../../../../lib/supabase';
 import { getHotels } from '../../../../lib/queries';
+import { HOTEL_ICON_MAP } from '../../../../components/Admin/hotelIcons';
+import { IconPicker } from '../../../../components/Admin/IconPicker';
+import { ImagePicker } from '../../../../components/Admin/ImagePicker';
+
+interface Highlight {
+    icon: string;
+    text: string;
+}
 
 interface HotelEntry {
     id?: string;
@@ -13,13 +21,15 @@ interface HotelEntry {
     location_name: string;
     short_description: string;
     full_description: string;
-
     featured: boolean;
     latitude: number;
     longitude: number;
     meta_title: string;
     meta_description: string;
     destination_slug?: string;
+    highlights?: Highlight[];
+    google_maps_embed_url?: string;
+    thumbnail_image?: string;
 }
 
 interface Room {
@@ -57,13 +67,17 @@ export default function AdminHotelsPage() {
     const [currentHotel, setCurrentHotel] = useState<HotelEntry | null>(null);
     const [isSaving, setIsSaving] = useState(false);
 
+    // Destinations State
+    const [destinations, setDestinations] = useState<{ slug: string; name: string }[]>([]);
+
     // Amenities State
     const [amenities, setAmenities] = useState<Amenity[]>([]);
     const [activeAmenities, setActiveAmenities] = useState<string[]>([]);
     const [loadingAmenities, setLoadingAmenities] = useState(false);
 
     // Rooms State
-    const [activeTab, setActiveTab] = useState<'general' | 'content' | 'amenities' | 'rooms' | 'gallery' | 'faqs' | 'seo'>('general');
+    const [activeTab, setActiveTab] = useState<'general' | 'content' | 'highlights' | 'amenities' | 'rooms' | 'gallery' | 'faqs' | 'seo'>('general');
+    const [activeHighlightIdx, setActiveHighlightIdx] = useState<number | null>(null);
     const [rooms, setRooms] = useState<Room[]>([]);
     const [editingRoom, setEditingRoom] = useState<Room | null>(null);
 
@@ -112,11 +126,17 @@ export default function AdminHotelsPage() {
     useEffect(() => {
         fetchHotels();
         fetchMasterAmenities();
+        fetchDestinations();
     }, []);
 
     const fetchMasterAmenities = async () => {
         const { data } = await supabase.from('amenities').select('*').order('name');
         setAmenities(data || []);
+    };
+
+    const fetchDestinations = async () => {
+        const { data } = await supabase.from('destinations').select('slug, name').order('name');
+        setDestinations(data || []);
     };
 
     const fetchHotelAmenities = async (hotelId: string) => {
@@ -196,7 +216,9 @@ export default function AdminHotelsPage() {
     const saveRoom = async () => {
         if (!editingRoom || !currentHotel?.id) return;
         try {
-            const payload = { ...editingRoom, hotel_id: currentHotel.id };
+            // Strip out relational fields and non-column fields before upsert
+            const { room_amenities, images, sleeping_arrangements, ...roomData } = editingRoom as any;
+            const payload = { ...roomData, hotel_id: currentHotel.id };
             if (!payload.id) delete payload.id;
 
             const { data: savedRoom, error } = await supabase
@@ -347,16 +369,16 @@ export default function AdminHotelsPage() {
 
         const dbColumns = [
             'id', 'name', 'slug', 'location_name', 'short_description',
-            'full_description', 'featured',
+            'full_description', 'featured', 'highlights',
             'latitude', 'longitude', 'meta_title', 'meta_description',
-            'destination_slug'
+            'destination_slug', 'google_maps_embed_url', 'thumbnail_image'
         ];
 
         const sanitized = Object.fromEntries(
             Object.entries(hotel).filter(([key]) => dbColumns.includes(key))
         ) as unknown as HotelEntry;
 
-        setCurrentHotel(sanitized);
+        setCurrentHotel({ ...sanitized, highlights: sanitized.highlights ?? [] });
         fetchHotelAmenities(hotel.id);
         fetchRooms(hotel.id);
         fetchHotelImages(hotel.id);
@@ -377,8 +399,10 @@ export default function AdminHotelsPage() {
             latitude: 31.45,
             longitude: 78.25,
             meta_title: '',
-            meta_description: ''
-
+            meta_description: '',
+            google_maps_embed_url: '',
+            highlights: [],
+            thumbnail_image: ''
         });
         setActiveAmenities([]);
         setRooms([]);
@@ -395,14 +419,19 @@ export default function AdminHotelsPage() {
         try {
             const dbColumns = [
                 'id', 'name', 'slug', 'location_name', 'short_description',
-                'full_description', 'featured',
+                'full_description', 'featured', 'highlights',
                 'latitude', 'longitude', 'meta_title', 'meta_description',
-                'destination_slug'
+                'destination_slug', 'google_maps_embed_url', 'thumbnail_image'
             ];
 
             const savePayload = Object.fromEntries(
                 Object.entries(currentHotel).filter(([key, val]) => dbColumns.includes(key) && val !== undefined)
             );
+
+            // Always include highlights, google_maps_embed_url, and thumbnail_image explicitly
+            savePayload.highlights = currentHotel.highlights ?? null;
+            savePayload.google_maps_embed_url = currentHotel.google_maps_embed_url || null;
+            savePayload.thumbnail_image = currentHotel.thumbnail_image || null;
 
             if (!savePayload.id) delete savePayload.id;
 
@@ -584,7 +613,7 @@ export default function AdminHotelsPage() {
                             <div>
                                 <h3 className="text-xl font-serif font-bold text-charcoal">{currentHotel.name || 'New Property'}</h3>
                                 <div className="flex gap-6 mt-4">
-                                    {['general', 'content', 'amenities', 'rooms', 'gallery', 'faqs', 'seo'].map(tab => (
+                                    {['general', 'content', 'highlights', 'amenities', 'rooms', 'gallery', 'faqs', 'seo'].map(tab => (
                                         <button
                                             key={tab}
                                             onClick={() => setActiveTab(tab as any)}
@@ -606,7 +635,7 @@ export default function AdminHotelsPage() {
 
                             {activeTab === 'general' && (
                                 <div className="space-y-8 animate-in fade-in slide-in-from-bottom-2 duration-300">
-                                    <div className="grid grid-cols-2 gap-8">
+                                    <div className="grid grid-cols-2 gap-6">
                                         <div className="space-y-2">
                                             <label className="text-xs font-bold uppercase text-charcoal/60">Property Name</label>
                                             <input type="text" value={currentHotel.name} onChange={(e) => {
@@ -624,7 +653,67 @@ export default function AdminHotelsPage() {
                                             <label className="text-xs font-bold uppercase text-charcoal/60">Location</label>
                                             <input type="text" value={currentHotel.location_name} onChange={(e) => setCurrentHotel({ ...currentHotel, location_name: e.target.value })} className="w-full bg-white border border-charcoal/10 rounded-lg px-4 py-3 outline-none text-sm focus:border-forest focus:ring-1 focus:ring-forest/20 transition-all" />
                                         </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase text-charcoal/60">Destination</label>
+                                            <select
+                                                value={currentHotel.destination_slug || ''}
+                                                onChange={(e) => setCurrentHotel({ ...currentHotel, destination_slug: e.target.value || undefined })}
+                                                className="w-full bg-white border border-charcoal/10 rounded-lg px-4 py-3 outline-none text-sm focus:border-forest focus:ring-1 focus:ring-forest/20 transition-all"
+                                            >
+                                                <option value="">— None —</option>
+                                                {destinations.map(d => (
+                                                    <option key={d.slug} value={d.slug}>{d.name}</option>
+                                                ))}
+                                            </select>
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase text-charcoal/60">Latitude</label>
+                                            <input type="number" step="0.0001" value={currentHotel.latitude} onChange={(e) => setCurrentHotel({ ...currentHotel, latitude: parseFloat(e.target.value) })} className="w-full bg-white border border-charcoal/10 rounded-lg px-4 py-3 outline-none text-sm font-mono focus:border-forest focus:ring-1 focus:ring-forest/20 transition-all" placeholder="e.g. 31.1048" />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <label className="text-xs font-bold uppercase text-charcoal/60">Longitude</label>
+                                            <input type="number" step="0.0001" value={currentHotel.longitude} onChange={(e) => setCurrentHotel({ ...currentHotel, longitude: parseFloat(e.target.value) })} className="w-full bg-white border border-charcoal/10 rounded-lg px-4 py-3 outline-none text-sm font-mono focus:border-forest focus:ring-1 focus:ring-forest/20 transition-all" placeholder="e.g. 77.1734" />
+                                        </div>
 
+                                        <div className="col-span-2 space-y-2">
+                                            <label className="text-xs font-bold uppercase text-charcoal/60">Google Maps Embed</label>
+                                            <p className="text-[10px] text-charcoal/40">In Google Maps, click Share → Embed a map → Copy the full iframe code or just the src URL and paste here.</p>
+                                            <textarea
+                                                rows={3}
+                                                value={currentHotel.google_maps_embed_url || ''}
+                                                onChange={(e) => {
+                                                    const raw = e.target.value.trim();
+                                                    // Extract src URL if full iframe code is pasted
+                                                    const match = raw.match(/src=["']([^"']+)["']/);
+                                                    setCurrentHotel({ ...currentHotel, google_maps_embed_url: match ? match[1] : raw });
+                                                }}
+                                                className="w-full bg-white border border-charcoal/10 rounded-lg px-4 py-3 outline-none text-sm font-mono text-charcoal/80 focus:border-forest focus:ring-1 focus:ring-forest/20 transition-all resize-none"
+                                                placeholder='Paste <iframe ...> embed code or the src URL from Google Maps'
+                                            />
+                                            {currentHotel.google_maps_embed_url && (
+                                                <p className="text-[10px] text-forest/60 font-mono truncate">✓ {currentHotel.google_maps_embed_url}</p>
+                                            )}
+                                        </div>
+                                    </div>
+
+                                    {/* Thumbnail Image */}
+                                    <ImagePicker
+                                        label="Thumbnail Image (shown on Property Cards)"
+                                        value={currentHotel.thumbnail_image || ''}
+                                        onChange={(url) => setCurrentHotel({ ...currentHotel, thumbnail_image: url })}
+                                    />
+
+                                    <div className="flex items-center justify-between p-5 bg-white rounded-xl border border-charcoal/10">
+                                        <div>
+                                            <p className="text-sm font-bold text-charcoal">Featured Property</p>
+                                            <p className="text-xs text-charcoal/40 mt-0.5">Show this property in featured sections on the homepage</p>
+                                        </div>
+                                        <button
+                                            onClick={() => setCurrentHotel({ ...currentHotel, featured: !currentHotel.featured })}
+                                            className={`relative w-14 h-7 rounded-full transition-colors duration-200 focus:outline-none ${currentHotel.featured ? 'bg-forest' : 'bg-charcoal/20'}`}
+                                        >
+                                            <span className={`absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-full shadow transition-transform duration-200 ${currentHotel.featured ? 'translate-x-7' : 'translate-x-0'}`}></span>
+                                        </button>
                                     </div>
 
                                 </div>
@@ -655,7 +744,7 @@ export default function AdminHotelsPage() {
                                                     : 'bg-white border-charcoal/10 text-charcoal/60 hover:border-charcoal/30 hover:bg-gray-50'
                                                     }`}
                                             >
-                                                <i className={`${amenity.icon || 'fas fa-star'} text-lg`}></i>
+                                                {(() => { const IC = HOTEL_ICON_MAP[amenity.icon]; return IC ? <IC size={18} /> : <span className="text-xs">?</span>; })()}
                                                 <span className="text-xs font-bold uppercase tracking-wider">{amenity.name}</span>
                                                 {activeAmenities.includes(amenity.id) && (
                                                     <i className="fas fa-check ml-auto text-xs text-forest"></i>
@@ -702,7 +791,7 @@ export default function AdminHotelsPage() {
                                                             <p className="text-xs text-charcoal/50 mt-1">{room.max_guests} Guests • <span className="font-mono text-forest font-bold">₹{room.price_per_night}</span>/night</p>
                                                         </div>
                                                         <div className="flex gap-2">
-                                                            <button 
+                                                            <button
                                                                 onClick={() => handleDuplicateRoom(room)}
                                                                 title="Duplicate Room"
                                                                 className="w-8 h-8 rounded-lg border border-charcoal/10 text-terracotta hover:bg-terracotta hover:text-white hover:border-terracotta flex items-center justify-center transition-all"
@@ -782,7 +871,7 @@ export default function AdminHotelsPage() {
                                                                     </div>
 
                                                                     <div className="space-y-2">
-                                                                        <label className="text-xs font-bold uppercase text-charcoal/60">Sleeping Arrangements</label>
+                                                                        <label className="text-xs font-bold uppercase text-charcoal/60">Inside Your Room</label>
                                                                         <div className="space-y-2">
                                                                             {(editingRoom.sleeping_arrangements || []).map((point, idx) => (
                                                                                 <div key={idx} className="flex gap-2">
@@ -835,7 +924,7 @@ export default function AdminHotelsPage() {
                                                                                     ? 'bg-forest text-white'
                                                                                     : 'bg-charcoal/5 text-charcoal/40'
                                                                                     }`}>
-                                                                                    <i className={`fas fa-${amenity.icon}`}></i>
+                                                                                    {(() => { const IC = HOTEL_ICON_MAP[amenity.icon]; return IC ? <IC size={16} /> : <span className="text-xs">?</span>; })()}
                                                                                 </div>
                                                                                 <span className={`text-xs font-bold ${activeRoomAmenities.includes(amenity.id) ? 'text-forest' : 'text-charcoal/60'}`}>
                                                                                     {amenity.name}
@@ -1075,6 +1164,89 @@ export default function AdminHotelsPage() {
                                             </div>
                                         )}
                                     </div>
+                                </div>
+                            )}
+
+                            {activeTab === 'highlights' && (
+                                <div className="animate-in fade-in slide-in-from-bottom-2 duration-300 space-y-4">
+                                    <div className="flex items-center justify-between">
+                                        <div>
+                                            <h4 className="text-lg font-serif font-bold text-charcoal">Property Highlights</h4>
+                                            <p className="text-xs text-charcoal/40 mt-0.5">Key selling points shown above the description on the property page</p>
+                                        </div>
+                                        <button
+                                            onClick={() => {
+                                                const updated = [...(currentHotel.highlights || []), { icon: 'Mountain', text: '' }];
+                                                setCurrentHotel({ ...currentHotel, highlights: updated });
+                                                setActiveHighlightIdx(updated.length - 1);
+                                            }}
+                                            className="bg-charcoal text-white px-5 py-2 rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-charcoal/80 transition-all"
+                                        >
+                                            + Add Highlight
+                                        </button>
+                                    </div>
+
+                                    {(currentHotel.highlights || []).length === 0 ? (
+                                        <div className="text-center py-16 border-2 border-dashed border-charcoal/10 rounded-xl bg-gray-50">
+                                            <p className="text-[10px] font-bold uppercase tracking-widest text-charcoal/30">No highlights yet — click + Add Highlight</p>
+                                        </div>
+                                    ) : (
+                                        <div className="space-y-3">
+                                            {(currentHotel.highlights || []).map((hl, idx) => {
+                                                const IconComp = HOTEL_ICON_MAP[hl.icon];
+                                                const isExpanded = activeHighlightIdx === idx;
+                                                return (
+                                                    <div key={idx} className="bg-white border border-charcoal/10 rounded-xl overflow-hidden">
+                                                        {/* Row */}
+                                                        <div className="flex items-center gap-3 p-3">
+                                                            <button
+                                                                onClick={() => setActiveHighlightIdx(isExpanded ? null : idx)}
+                                                                className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all ${isExpanded ? 'bg-terracotta text-white' : 'bg-terracotta/10 text-terracotta hover:bg-terracotta/20'}`}
+                                                                title="Change icon"
+                                                            >
+                                                                {IconComp ? <IconComp size={18} /> : <span className="text-xs font-bold">?</span>}
+                                                            </button>
+                                                            <input
+                                                                type="text"
+                                                                value={hl.text}
+                                                                onChange={(e) => {
+                                                                    const updated = [...(currentHotel.highlights || [])];
+                                                                    updated[idx] = { ...updated[idx], text: e.target.value };
+                                                                    setCurrentHotel({ ...currentHotel, highlights: updated });
+                                                                }}
+                                                                placeholder="e.g. Himalayan Views"
+                                                                className="flex-1 bg-gray-50 border border-charcoal/10 rounded-lg px-4 py-2 outline-none text-sm font-medium focus:border-forest focus:ring-1 focus:ring-forest/20 transition-all"
+                                                            />
+                                                            <button
+                                                                onClick={() => {
+                                                                    const updated = (currentHotel.highlights || []).filter((_, i) => i !== idx);
+                                                                    setCurrentHotel({ ...currentHotel, highlights: updated });
+                                                                    if (activeHighlightIdx === idx) setActiveHighlightIdx(null);
+                                                                }}
+                                                                className="w-8 h-8 rounded-lg border border-red-100 text-red-400 hover:bg-red-500 hover:text-white flex items-center justify-center transition-all flex-shrink-0"
+                                                            >
+                                                                <svg className="w-3 h-3" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><polyline points="3 6 5 6 21 6" /><path d="M19 6l-1 14H6L5 6" /><path d="M9 6V4h6v2" /></svg>
+                                                            </button>
+                                                        </div>
+                                                        {/* Inline IconPicker */}
+                                                        {isExpanded && (
+                                                            <div className="px-4 pb-4 border-t border-charcoal/5 pt-4 bg-gray-50/70">
+                                                                <p className="text-[9px] font-bold uppercase tracking-widest text-charcoal/40 mb-3">Select Icon</p>
+                                                                <IconPicker
+                                                                    value={hl.icon}
+                                                                    onChange={(iconName) => {
+                                                                        const updated = [...(currentHotel.highlights || [])];
+                                                                        updated[idx] = { ...updated[idx], icon: iconName };
+                                                                        setCurrentHotel({ ...currentHotel, highlights: updated });
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
                                 </div>
                             )}
 

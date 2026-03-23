@@ -5,6 +5,7 @@ import { motion, useScroll, useTransform } from 'framer-motion';
 import { ImageGalleryModal } from './ImageGalleryModal';
 import { Button } from './ui/Button';
 import { useSettings } from '../context/SettingsContext';
+import { HOTEL_ICON_MAP } from './Admin/hotelIcons';
 
 interface RoomProps {
     room: {
@@ -17,6 +18,7 @@ interface RoomProps {
         images?: { id: string, image_url: string, alt_text?: string, tags?: string }[];
         room_amenities?: { amenity: { name: string, icon: string } }[];
         sleeping_arrangements?: string[];
+        inside_room?: string[];
         room_size?: string;
     };
     hotelName?: string;
@@ -82,17 +84,13 @@ export const RoomCard: React.FC<RoomProps> = ({ room, hotelName }) => {
 
             <motion.div
                 ref={cardRef}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
-                className="flex flex-col group items-stretch bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100 h-full"
+                className="flex flex-col group items-stretch bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-forest/5 h-full"
             >
 
                 {/* Image Section - Top weighted */}
                 <div className="w-full relative overflow-hidden shrink-0">
                     <div
-                        className="aspect-[4/3] w-full relative cursor-pointer"
+                        className="aspect-[5/3] w-full relative cursor-pointer"
                         onClick={() => openGallery(currentImageIndex)}
                     >
                         {/* Media Display */}
@@ -157,13 +155,11 @@ export const RoomCard: React.FC<RoomProps> = ({ room, hotelName }) => {
                 </div>
 
                 {/* Content Section */}
-                <div className="w-full flex flex-col p-8 flex-grow bg-white">
+                <div className="w-full flex flex-col p-4 sm:p-5 lg:p-5 flex-grow bg-white">
 
                     {/* Room Name & Brief Description */}
                     <div className="mb-6">
-                        <h4 className="text-l font-bold text-charcoal mb-2 leading-tight ">
-                            {room.name}
-                        </h4>
+
                         <p className="text-charcoal/60 text-sm leading-relaxed prose font-light min-h-[30px]">
                             {room.description}
                         </p>
@@ -198,7 +194,7 @@ export const RoomCard: React.FC<RoomProps> = ({ room, hotelName }) => {
                         <div className="flex flex-wrap gap-2 mb-6 pt-2 border-t border-gray-100/50">
                             {room.room_amenities.slice(0, room.room_amenities.length).map((item, idx) => (
                                 <div key={idx} className="flex items-center gap-1.5 px-2.5 py-1 bg-cream/30 rounded-full border border-forest/5">
-                                    <i className={`${item.amenity?.icon || 'fas fa-check'} text-[10px] text-terracotta opacity-80`}></i>
+                                    {(() => { const IC = HOTEL_ICON_MAP[item.amenity?.icon]; return IC ? <IC size={11} className="text-terracotta opacity-80 flex-shrink-0" /> : null; })()}
                                     <span className="text-[10px] font-medium text-charcoal/70 tracking-wide">{item.amenity?.name}</span>
                                 </div>
                             ))}
@@ -206,15 +202,31 @@ export const RoomCard: React.FC<RoomProps> = ({ room, hotelName }) => {
                         </div>
                     )}
 
+                    {/* Inside Your Room */}
+                    {room.inside_room && room.inside_room.length > 0 && (
+                        <div className="mb-2 pt-2 border-t border-gray-100/50">
+                            <p className="text-[9px] font-bold uppercase tracking-widest text-charcoal/40 mb-2">Inside Your Room</p>
+                            <ul className="space-y-1">
+                                {room.inside_room.map((item, idx) => (
+                                    <li key={idx} className="text-xs text-charcoal/70 flex items-start gap-2">
+                                        <span className="text-charcoal/30 mt-0.5">*</span>
+                                        <span>{item}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+
                     {/* Pricing & CTA Stack - Site Aligned */}
-                    <div className="mt-auto flex items-center justify-between">
-                        <div className="flex flex-col">
+                    <div className="mt-auto pt-2 border-t border-gray-100/50 flex items-end justify-between gap-1 sm:gap-3">
+                        <div className="flex flex-col shrink-0">
                             <p className="text-[10px] uppercase tracking-wider text-charcoal/40 mb-1">Price / Night</p>
-                            <div className="flex items-baseline gap-1">
-                                <span className="text-xl font-bold text-terracotta opacity-80">
-                                    From ₹{room.price_per_night.toLocaleString()}
+                            <div className="flex items-baseline gap-x-1 whitespace-nowrap">
+                                <span className="text-sm font-bold text-charcoal/60 mr-0.5">From</span>
+                                <span className="text-xl sm:text-xl font-bold text-terracotta opacity-90">
+                                    ₹{room.price_per_night.toLocaleString()}
                                 </span>
-                                <span className="text-xs text-charcoal/40 italic font-light">/nt</span>
+                                <span className="text-[10px] sm:text-xs text-charcoal/40 italic font-light ml-[1px]">/nt</span>
                             </div>
                         </div>
 
@@ -222,10 +234,10 @@ export const RoomCard: React.FC<RoomProps> = ({ room, hotelName }) => {
                             href={whatsappLink}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="group/btn flex items-center gap-2 bg-[#25D366] text-white px-5 py-2.5 rounded-full hover:bg-[#1EBE5D] transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                            className="group/btn flex items-center justify-center gap-1.5 sm:gap-2 bg-whatsapp text-white px-3.5 sm:px-5 py-2 sm:py-2.5 rounded-full hover:bg-whatsapp-dark transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 shrink-0"
                         >
-                            <span className="font-bold text-xs uppercase tracking-wider">Book Now</span>
-                            <i className="fab fa-whatsapp text-base"></i>
+                            <span className="font-bold text-[10px] sm:text-xs uppercase tracking-wider whitespace-nowrap">Book Now</span>
+                            <i className="fab fa-whatsapp text-sm sm:text-base"></i>
                         </a>
                     </div>
                 </div>

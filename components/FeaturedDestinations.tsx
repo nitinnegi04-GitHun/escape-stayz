@@ -37,13 +37,13 @@ export const FeaturedDestinations: React.FC<FeaturedDestinationsProps> = ({
     };
 
     return (
-        <section className="py-24 px-6 md:px-12 bg-white relative overflow-x-hidden">
+        <section className="py-14 px-6 md:px-12 bg-white relative overflow-x-hidden">
             <div className="max-w-7xl mx-auto">
                 <div className="text-center mb-16 max-w-2xl mx-auto">
                     <span className="text-terracotta font-bold uppercase tracking-[0.2em] text-sm block mb-4">{sub_heading}</span>
                     <h2 className="text-3xl md:text-5xl font-heading font-bold text-forest leading-tight">{heading}</h2>
                     <div className="w-24 h-1 bg-terracotta mx-auto mt-6 mb-8 rounded-full"></div>
-                    <p className="text-charcoal/70 text-base md:text-lg leading-relaxed font-light">{description}</p>
+                    <p className="text-charcoal/60 text-base md:text-lg leading-relaxed font-light">{description}</p>
                 </div>
 
                 <div className="relative group/nav overflow-x-hidden md:overflow-visible">

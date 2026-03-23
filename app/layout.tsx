@@ -1,10 +1,25 @@
 import './globals.css';
 import React from 'react';
 import { Providers } from './providers';
+import { Metadata } from 'next';
+import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, SITE_OG_IMAGE, SITE_LOGO } from '../lib/constants';
 
-export const metadata = {
-    title: 'Escape Stayz - Luxury Hotel Chain',
-    description: 'Crafting silent luxury and refined mountain hospitality across the globes most secluded peaks.',
+export const metadata: Metadata = {
+    metadataBase: new URL(SITE_URL),
+    title: {
+        default: `${SITE_NAME} - Luxury Hotel Chain`,
+        template: `%s | ${SITE_NAME}`,
+    },
+    description: SITE_DESCRIPTION,
+    openGraph: {
+        siteName: SITE_NAME,
+        type: 'website',
+        images: [SITE_OG_IMAGE],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        site: '@escapestayz',
+    },
 };
 
 export const viewport = {
@@ -22,9 +37,9 @@ export default function RootLayout({
     const organizationSchema = {
         "@context": "https://schema.org",
         "@type": "Organization",
-        "name": "Escape Stayz - Luxury Hotel Chain",
-        "url": "https://escapestayz.com",
-        "logo": "https://escapestayz.com/logo.png",
+        "name": SITE_NAME,
+        "url": SITE_URL,
+        "logo": SITE_LOGO,
         "sameAs": [
             "https://www.instagram.com/escapestayz",
             "https://www.facebook.com/escapestayz"
@@ -38,6 +53,21 @@ export default function RootLayout({
         }
     };
 
+    const websiteSchema = {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": SITE_NAME,
+        "url": SITE_URL,
+        "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+                "@type": "EntryPoint",
+                "urlTemplate": `${SITE_URL}/hotels?q={search_term_string}`
+            },
+            "query-input": "required name=search_term_string"
+        }
+    };
+
     return (
         <html lang="en">
             <head>
@@ -47,7 +77,7 @@ export default function RootLayout({
                 />
                 <script
                     type="application/ld+json"
-                    dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }}
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify([organizationSchema, websiteSchema]) }}
                 />
             </head>
             <body>
@@ -56,3 +86,4 @@ export default function RootLayout({
         </html>
     );
 }
+

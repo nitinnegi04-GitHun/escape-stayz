@@ -5,8 +5,8 @@ import { cache } from 'react';
 import { Layout } from '../../components/Layout';
 import { PageHero } from '../../components/PageHero';
 import { getBlogPosts } from '../../lib/queries';
-
 import { supabase } from '../../lib/supabase';
+import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from '../../lib/constants';
 
 // Revalidate every hour
 export const revalidate = 3600;
@@ -41,11 +41,23 @@ export async function generateMetadata(): Promise<Metadata> {
     return {
         title,
         description,
+        alternates: {
+            canonical: `${SITE_URL}/blog`,
+        },
         openGraph: {
             title,
             description,
             type: 'website',
-        }
+            url: `${SITE_URL}/blog`,
+            siteName: SITE_NAME,
+            images: [SITE_OG_IMAGE],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: [SITE_OG_IMAGE],
+        },
     };
 }
 
@@ -88,8 +100,8 @@ export default async function BlogPage() {
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://escapestayz.com/" },
-            { "@type": "ListItem", "position": 2, "name": "Journal", "item": "https://escapestayz.com/blog" }
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
+            { "@type": "ListItem", "position": 2, "name": "Journal", "item": `${SITE_URL}/blog` }
         ]
     };
 

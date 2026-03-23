@@ -46,7 +46,7 @@ export const HotelGallery: React.FC<HotelGalleryProps> = ({ images, hotelName, h
                 initialIndex={galleryStartIndex}
             />
 
-            <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[65vh] md:h-[60vh] lg:h-[75vh] overflow-hidden relative group/gallery">
+            <div className="grid grid-cols-4 grid-rows-2 gap-2 h-[65vh] md:h-[65vh] lg:h-[75vh] overflow-hidden relative group/gallery">
                 {/* Main Hero Image */}
                 <div
                     className={`col-span-4 md:col-span-2 row-span-2 relative group cursor-pointer overflow-hidden`}
@@ -78,8 +78,15 @@ export const HotelGallery: React.FC<HotelGalleryProps> = ({ images, hotelName, h
                         <span className="inline-block px-3 py-1 border border-white/40 rounded-full text-white text-[8px] md:text-[9px] font-bold uppercase tracking-[0.2em] mb-4 backdrop-blur-sm bg-black/20">
                             The Property
                         </span>
-                        <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-heading text-white text-shadow-lg leading-tight">
-                            {hotelName}
+                        <h1 className="font-heading text-white text-shadow-lg leading-none">
+                            <span className="block text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light tracking-wide opacity-90">
+                                {hotelName.includes(' ') ? hotelName.substring(0, hotelName.lastIndexOf(' ')) : hotelName}
+                            </span>
+                            {hotelName.includes(' ') && (
+                                <span className="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold mt-1">
+                                    {hotelName.substring(hotelName.lastIndexOf(' ') + 1)}
+                                </span>
+                            )}
                         </h1>
                     </div>
 
@@ -137,7 +144,7 @@ export const HotelGallery: React.FC<HotelGalleryProps> = ({ images, hotelName, h
                     className="absolute bottom-4 right-4 md:bottom-6 md:right-6 bg-white border border-charcoal/10 px-3 py-1.5 md:px-5 md:py-2 rounded-lg shadow-lg flex items-center gap-2 hover:scale-105 transition-transform z-30"
                 >
                     <i className="fas fa-grid-2 text-[10px] md:text-xs"></i>
-                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-charcoal">Photos</span>
+                    <span className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-charcoal">View All Photos</span>
                 </button>
             </div>
         </>

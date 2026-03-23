@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSettings, SiteSettings } from '../../../../context/SettingsContext';
 import { ImagePicker } from '../../../../components/Admin/ImagePicker';
+import { IconRegistry } from '../../../../components/Admin/IconRegistry';
 
 export default function AdminSettingsPage() {
     const { settings, updateSettings } = useSettings();
@@ -240,6 +241,9 @@ export default function AdminSettingsPage() {
                         </div>
                     </div>
                 </div>
+
+                {/* Icon Registry */}
+                <IconRegistry />
 
                 {/* Social Media */}
                 <div className="bg-white rounded-3xl p-8 shadow-sm border border-charcoal/5">

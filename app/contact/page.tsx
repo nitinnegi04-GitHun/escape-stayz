@@ -1,6 +1,7 @@
 
 import { Metadata } from 'next';
 import { cache } from 'react';
+import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from '../../lib/constants';
 import { Layout } from '../../components/Layout';
 import { PageHero } from '../../components/PageHero';
 import { ContactForm } from '../../components/ContactForm';
@@ -35,15 +36,23 @@ export async function generateMetadata(): Promise<Metadata> {
     return {
         title,
         description,
+        alternates: {
+            canonical: `${SITE_URL}/contact`,
+        },
         openGraph: {
             title,
             description,
             type: 'website',
-            url: 'https://escapestayz.com/contact',
+            url: `${SITE_URL}/contact`,
+            siteName: SITE_NAME,
+            images: [SITE_OG_IMAGE],
         },
-        alternates: {
-            canonical: 'https://escapestayz.com/contact',
-        }
+        twitter: {
+            card: 'summary_large_image',
+            title,
+            description,
+            images: [SITE_OG_IMAGE],
+        },
     };
 }
 
@@ -80,18 +89,20 @@ export default async function ContactPage() {
             "@context": "https://schema.org",
             "@type": "BreadcrumbList",
             "itemListElement": [
-                { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://escapestayz.com/" },
-                { "@type": "ListItem", "position": 2, "name": "Contact", "item": "https://escapestayz.com/contact" }
+                { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
+                { "@type": "ListItem", "position": 2, "name": "Contact", "item": `${SITE_URL}/contact` }
             ]
         },
         {
             "@context": "https://schema.org",
             "@type": "ContactPage",
+            "url": `${SITE_URL}/contact`,
             "mainEntity": {
                 "@type": "Organization",
-                "name": "Escape Stayz",
-                "telephone": "+1-800-ESCAPE-7",
-                "email": "concierge@escapestayz.com"
+                "name": SITE_NAME,
+                "url": SITE_URL,
+                "telephone": "+91-9999999999",
+                "email": "concierge@escapestayz.in"
             }
         }
     ];

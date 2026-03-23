@@ -105,7 +105,7 @@ export const ReservationSidebar: React.FC<ReservationSidebarProps> = ({ hotelNam
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
-            className="bg-white p-6 lg:p-8 rounded-[2.5rem] shadow-2xl shadow-forest/10 border border-forest/5 text-center max-h-[calc(100vh-150px)] overflow-y-auto flex flex-col custom-scrollbar"
+            className="bg-white p-6 lg:p-8 rounded-3xl shadow-2xl shadow-forest/10 border border-forest/5 text-center max-h-[calc(100vh-150px)] overflow-y-auto flex flex-col custom-scrollbar"
         >
             <div className="flex flex-col items-center mb-8">
                 <span className="text-[15px] font-bold  tracking-[0.3em] text-terracotta mb-2 text-center block w-full">Reservation Desk</span>
@@ -192,7 +192,7 @@ export const ReservationSidebar: React.FC<ReservationSidebarProps> = ({ hotelNam
             {/* Book Now Button */}
             <button
                 onClick={handleBookNow}
-                className="w-full shrink-0 group/btn flex items-center justify-center gap-2 bg-[#25D366] text-white px-5 py-3.5 rounded-full hover:bg-[#1EBE5D] transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                className="w-full shrink-0 group/btn flex items-center justify-center gap-2 bg-whatsapp text-white px-5 py-3.5 rounded-full hover:bg-whatsapp-dark transition-all duration-300 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
             >
                 <i className="fab fa-whatsapp text-lg"></i>
                 <span className="font-bold text-sm uppercase tracking-widest">Send Query on WhatsApp</span>

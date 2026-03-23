@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useEffect, useCallback } from 'react';
+import { useRef, useState, useCallback, useEffect } from 'react';
 import { RoomCard } from './RoomCard';
 
 export const RoomCarousel = ({ rooms, hotelName }: { rooms: any[], hotelName?: string }) => {
@@ -29,6 +29,19 @@ export const RoomCarousel = ({ rooms, hotelName }: { rooms: any[], hotelName?: s
         }
 
         setActiveIndex(newIndex);
+    }, []);
+
+    useEffect(() => {
+        const el = scrollContainerRef.current;
+        if (!el) return;
+        const onWheel = (e: WheelEvent) => {
+            if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+                e.preventDefault();
+                window.scrollBy({ top: e.deltaY, behavior: 'auto' });
+            }
+        };
+        el.addEventListener('wheel', onWheel, { passive: false });
+        return () => el.removeEventListener('wheel', onWheel);
     }, []);
 
     const scrollToIndex = (index: number) => {
@@ -96,6 +109,7 @@ export const RoomCarousel = ({ rooms, hotelName }: { rooms: any[], hotelName?: s
             >
                 {rooms.map((room) => (
                     <div key={room.id} className="snap-start shrink-0 w-[80vw] md:w-[60vw] lg:w-[380px] xl:w-[420px]">
+                        <h4 className="text-base font-bold text-charcoal mb-3 font-heading truncate">{room.name}</h4>
                         <RoomCard room={room} hotelName={hotelName} />
                     </div>
                 ))}

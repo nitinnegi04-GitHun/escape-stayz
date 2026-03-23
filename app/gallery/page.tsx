@@ -1,16 +1,28 @@
 
 import { Metadata } from 'next';
 import { Layout } from '../../components/Layout';
-// import { SEO } from '../../components/SEO'; // SEO components are replaced by Metadata API
+import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from '../../lib/constants';
 
 export const metadata: Metadata = {
     title: 'Visual Showcase | Escape Stayz',
-    description: 'Immerse yourself in the beauty of Escape Stayz through our high-definition gallery.',
+    description: 'Immerse yourself in the beauty of Escape Stayz through our high-definition gallery of Himalayan luxury properties.',
+    alternates: {
+        canonical: `${SITE_URL}/gallery`,
+    },
     openGraph: {
         title: 'Visual Showcase | Escape Stayz',
-        description: 'Immerse yourself in the beauty of Escape Stayz through our high-definition gallery.',
+        description: 'Immerse yourself in the beauty of Escape Stayz through our high-definition gallery of Himalayan luxury properties.',
         type: 'website',
-    }
+        url: `${SITE_URL}/gallery`,
+        siteName: SITE_NAME,
+        images: [SITE_OG_IMAGE],
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Visual Showcase | Escape Stayz',
+        description: 'Immerse yourself in the beauty of Escape Stayz through our high-definition gallery.',
+        images: [SITE_OG_IMAGE],
+    },
 };
 
 const GALLERY_IMAGES = [
@@ -27,16 +39,27 @@ const GALLERY_IMAGES = [
 export default function GalleryPage() {
     return (
         <Layout>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify({
+                    '@context': 'https://schema.org',
+                    '@type': 'BreadcrumbList',
+                    itemListElement: [
+                        { '@type': 'ListItem', position: 1, name: 'Home', item: `${SITE_URL}/` },
+                        { '@type': 'ListItem', position: 2, name: 'Gallery', item: `${SITE_URL}/gallery` },
+                    ],
+                }) }}
+            />
             <section className="py-20">
                 <div className="container mx-auto px-6">
                     <div className="text-left mb-16 max-w-2xl">
                         <h1 className="text-5xl font-bold mb-4">Immersive Views</h1>
-                        <p className="text-slate-500">A curated collection of moments from across our global properties.</p>
+                        <p className="text-slate-500">A curated collection of moments from across our Himalayan properties.</p>
                     </div>
                     <div className="columns-1 md:columns-2 lg:columns-3 gap-6 space-y-6">
                         {GALLERY_IMAGES.map((img, idx) => (
                             <div key={idx} className="break-inside-avoid rounded-3xl overflow-hidden shadow-sm hover:shadow-2xl transition-all group">
-                                <img src={img} className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500" alt="Gallery" />
+                                <img src={img} className="w-full h-auto object-cover group-hover:scale-105 transition-transform duration-500" alt={`Escape Stayz property gallery image ${idx + 1}`} />
                             </div>
                         ))}
                     </div>

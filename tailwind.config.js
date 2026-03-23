@@ -13,6 +13,8 @@ export default {
                 cream: 'var(--color-cream)',
                 terracotta: 'var(--color-terracotta)',
                 charcoal: 'var(--color-charcoal)',
+                whatsapp: '#25D366',
+                'whatsapp-dark': '#128C7E',
             },
             backgroundImage: {
                 'forest-gradient': 'linear-gradient(to right, #0F2027, #203A43, #2C5364)', // Example dark forest gradient

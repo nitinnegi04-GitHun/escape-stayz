@@ -9,6 +9,7 @@ import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { Button } from '../../../components/ui/Button';
 import { getBlogPostBySlug, getHotels, getBlogPosts } from '../../../lib/queries';
 import { supabase } from '../../../lib/supabase';
+import { SITE_URL, SITE_NAME, SITE_LOGO } from '../../../lib/constants';
 
 // Revalidate every hour
 export const revalidate = 3600;
@@ -109,12 +110,17 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     return {
         title,
         description,
+        alternates: {
+            canonical: `${SITE_URL}/blog/${post.slug}`,
+        },
         openGraph: {
             title,
             description,
             type: 'article',
+            url: `${SITE_URL}/blog/${post.slug}`,
+            siteName: SITE_NAME,
             images: [image],
-            authors: ['Elena Rossi'], // Hardcoded as per original
+            authors: [post.author || 'Escape Concierge'],
         },
         twitter: {
             card: 'summary_large_image',
@@ -122,9 +128,6 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             description,
             images: [image],
         },
-        alternates: {
-            canonical: `https://escapestayz.com/blog/${post.slug}`,
-        }
     };
 }
 
@@ -162,18 +165,20 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         "headline": post.title,
         "image": [post.featured_image],
         "datePublished": post.created_at,
+        "dateModified": post.updated_at || post.created_at,
         "author": [{
             "@type": "Person",
-            "name": "Elena Rossi",
-            "url": "https://escapestayz.com/about"
+            "name": post.author || "Escape Concierge",
+            "url": `${SITE_URL}/about`
         }],
         "description": post.excerpt,
+        "url": `${SITE_URL}/blog/${post.slug}`,
         "publisher": {
             "@type": "Organization",
-            "name": "Escape Stayz Luxury Group",
+            "name": SITE_NAME,
             "logo": {
                 "@type": "ImageObject",
-                "url": "https://escapestayz.com/logo.png"
+                "url": SITE_LOGO
             }
         }
     };

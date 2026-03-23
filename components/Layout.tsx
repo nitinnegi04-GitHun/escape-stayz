@@ -40,6 +40,14 @@ const Header = () => {
   }, []);
 
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
+  const [isMobile, setIsMobile] = React.useState(false);
+
+  useEffect(() => {
+    const check = () => setIsMobile(window.innerWidth < 1024);
+    check();
+    window.addEventListener('resize', check, { passive: true });
+    return () => window.removeEventListener('resize', check);
+  }, []);
 
   useEffect(() => {
     if (mobileMenuOpen) {
@@ -57,7 +65,7 @@ const Header = () => {
 
   if (!mounted) {
     return (
-      <header className={`fixed top-0 left-0 right-0 z-[100] h-16 lg:h-20 w-full ${!isHome ? 'bg-white shadow-md' : 'bg-transparent'}`}>
+      <header className={`fixed top-0 left-0 right-0 z-[100] h-16 lg:h-20 ${!isHome ? 'bg-white shadow-md' : 'bg-transparent'}`}>
         <div className="h-full w-full max-w-[2400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 flex items-center justify-between" />
       </header>
     );
@@ -65,30 +73,24 @@ const Header = () => {
 
   return (
     <>
-      <header 
-        className={`fixed top-0 left-0 right-0 z-[100] h-16 lg:h-20 w-full transition-colors duration-300 ${isScrolledState ? 'bg-white shadow-md text-forest' : 'bg-transparent text-white'}`}
+      <header
+        className={`fixed top-0 left-0 right-0 z-[100] h-16 lg:h-20 transition-colors duration-300 ${isScrolledState ? 'bg-white shadow-md text-forest' : 'bg-transparent text-white'}`}
       >
         <div className="h-full w-full max-w-[2400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 flex items-center justify-between relative">
-          
+
           {/* Logo - Force fixed dimensions to prevent any layout shifts */}
           <Link href="/" className="flex items-center gap-3 relative z-[110] shrink-0">
             {settings.logoUrl ? (
               <div className="h-8 md:h-10 w-32 md:w-40 flex items-center">
-                <img 
-                  src={(isScrolledState && settings.logoUrl2) ? settings.logoUrl2 : settings.logoUrl} 
-                  alt={settings.siteName} 
+                <img
+                  src={(isScrolledState && settings.logoUrl2) ? settings.logoUrl2 : settings.logoUrl}
+                  alt={settings.siteName}
                   className={`h-full w-auto object-contain transition-all duration-300 ${isScrolledState && !settings.logoUrl2 ? 'brightness-0' : ''}`}
                 />
               </div>
             ) : (
-              <div className="flex items-center gap-2">
-                <div className={`w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center shadow-lg ${isScrolledState ? 'bg-terracotta text-white' : 'bg-gradient-to-tr from-terracotta to-terracotta/80 text-white'}`}>
-                  <i className="fas fa-mountain text-sm md:text-base"></i>
-                </div>
-                <span className="text-lg md:text-xl lg:text-2xl font-bold tracking-tighter font-heading uppercase whitespace-nowrap">
-                  ESCAPE <span className="font-light opacity-70">STAYZ</span>
-                </span>
-              </div>
+              // Invisible placeholder while settings load — prevents fallback logo from flashing
+              <div className="h-8 md:h-10 w-32 md:w-40" />
             )}
           </Link>
 
@@ -129,9 +131,7 @@ const Header = () => {
             </div>
 
             <Link href="/blog" className="font-medium text-sm hover:text-terracotta transition-colors">Journal</Link>
-            <Link href="/admin" className={`font-medium text-sm hover:text-terracotta transition-colors border px-3 py-1 rounded-md ${isScrolledState ? 'border-forest/10 bg-forest/5' : 'border-white/20 bg-white/10'}`}>
-              Admin
-            </Link>
+            <Link href="/plan-your-trip" className="font-medium text-sm hover:text-terracotta transition-colors">Plan Your Trip</Link>
           </nav>
 
           {/* Mobile Menu Button - Locked dimensions and fixed position at end of flex */}
@@ -180,8 +180,7 @@ const Header = () => {
               </div>
             </div>
 
-            <Link href="/plan-your-trip" className="text-xl font-bold border-b border-white/10 pb-4 text-terracotta">AI Concierge</Link>
-            <Link href="/admin" className="text-sm opacity-50">Admin Panel</Link>
+            <Link href="/plan-your-trip" className="text-xl font-bold border-b border-white/10 pb-4 text-terracotta">Plan Your Trip</Link>
           </nav>
         </div>
       </div>
@@ -214,16 +213,16 @@ const Footer = () => {
 
           {/* Social Icons - Moved here for better layout */}
           <div className="flex gap-4 pt-4">
-            <a href={settings.socials.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-terracotta hover:text-white transition-all duration-300">
+            <a href={settings.socials.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-terracotta hover:bg-terracotta hover:text-white transition-all duration-300">
               <i className="fab fa-instagram"></i>
             </a>
-            <a href={settings.socials.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-terracotta hover:text-white transition-all duration-300">
+            <a href={settings.socials.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-terracotta hover:bg-terracotta hover:text-white transition-all duration-300">
               <i className="fab fa-linkedin-in"></i>
             </a>
-            <a href={settings.socials.pinterest} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-terracotta hover:text-white transition-all duration-300">
+            <a href={settings.socials.pinterest} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-terracotta hover:bg-terracotta hover:text-white transition-all duration-300">
               <i className="fab fa-pinterest-p"></i>
             </a>
-            <a href={settings.socials.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center hover:bg-terracotta hover:text-white transition-all duration-300">
+            <a href={settings.socials.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center text-terracotta hover:bg-terracotta hover:text-white transition-all duration-300">
               <i className="fab fa-facebook-f"></i>
             </a>
           </div>
@@ -239,7 +238,7 @@ const Footer = () => {
             <li><Link href="/blog" className="hover:text-white transition-colors">Journal</Link></li>
           </ul>
         </div>
- 
+
         {/* Guest Care */}
         <div>
           <h4 className="font-heading text-xl mb-8">Guest Care</h4>
@@ -278,53 +277,88 @@ export const Layout: React.FC<{ children: React.ReactNode, title?: string }> = (
   const whatsappNumber = settings.contact.phone.replace(/\D/g, '');
 
   return (
-    <div className="min-h-screen flex flex-col selection:bg-forest selection:text-white">
+    <>
+      {/* Fixed elements rendered outside the page wrapper to prevent compositing conflicts */}
       <Header />
-      <main className={`flex-grow relative ${isHome ? '' : 'pt-16 lg:pt-20'} pb-24 lg:pb-0`}>
-        {children}
-      </main>
-      <Footer />
 
       {/* Floating WhatsApp Button */}
       <a
         href={`https://wa.me/${whatsappNumber}`}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-24 right-6 z-[9999] bg-[#25D366] text-white w-14 h-14 rounded-full hidden lg:flex items-center justify-center shadow-lg hover:bg-[#128C7E] transition-all hover:scale-110"
+        className="fixed bottom-24 right-6 z-[9999] text-white w-14 h-14 rounded-full hidden lg:flex items-center justify-center shadow-xl hover:scale-110 transition-all duration-300"
+        style={{ backgroundColor: '#25D366' }}
         aria-label="Chat on WhatsApp"
       >
         <i className="fab fa-whatsapp text-3xl"></i>
       </a>
 
-      {/* Mobile Bottom Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-100 z-[9999] px-6 py-3 lg:hidden safe-area-bottom shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.1)]">
-        <ul className="flex justify-between items-center">
-          <li>
-            <Link href="/" className={`flex flex-col items-center gap-1 ${pathname === '/' ? 'text-terracotta' : 'text-forest/60'}`}>
-              <i className="fas fa-home text-lg"></i>
-              <span className="text-[10px] font-medium">Home</span>
-            </Link>
-          </li>
-          <li>
-            <Link href="/hotels" className={`flex flex-col items-center gap-1 ${pathname.startsWith('/hotels') ? 'text-terracotta' : 'text-forest/60'}`}>
-              <i className="fas fa-mountain text-lg"></i>
-              <span className="text-[10px] font-medium">Properties</span>
-            </Link>
-          </li>
-          <li>
-            <a href={`https://wa.me/${whatsappNumber}`} target="_blank" rel="noopener noreferrer" className="flex flex-col items-center gap-1 text-[#25D366]">
-              <i className="fab fa-whatsapp text-lg"></i>
-              <span className="text-[10px] font-medium">WhatsApp</span>
-            </a>
-          </li>
-          <li>
-            <a href={`tel:${settings.contact.phone}`} className="flex flex-col items-center gap-1 text-forest/60">
-              <i className="fas fa-phone-alt text-lg"></i>
-              <span className="text-[10px] font-medium">Contact</span>
-            </a>
-          </li>
-        </ul>
+      {/* Mobile Bottom Navigation — Full width dark bar */}
+      <nav className="fixed bottom-0 left-0 right-0 z-[9999] lg:hidden pb-safe" style={{ backgroundColor: 'rgba(45, 58, 58, 0.98)' }}>
+        <div className="flex items-stretch border-t border-white/10 pt-1 pb-0">
+
+          {/* Home */}
+          <Link
+            href="/"
+            className={`flex-1 flex flex-col items-center justify-center gap-1 py-3 transition-all duration-200 relative ${pathname === '/' ? 'text-white' : 'text-white/45'}`}
+          >
+            {pathname === '/' && <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-[2px] bg-terracotta rounded-b-full" />}
+            <i className="fas fa-home text-lg leading-none"></i>
+            <span className="text-[10px] font-semibold tracking-wide uppercase">Home</span>
+          </Link>
+
+          {/* Stays */}
+          <Link
+            href="/hotels"
+            className={`flex-1 flex flex-col items-center justify-center gap-1.5 py-3 transition-all duration-200 relative ${pathname.startsWith('/hotels') ? 'text-white' : 'text-white/45'}`}
+          >
+            {pathname.startsWith('/hotels') && <span className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-[3px] bg-terracotta rounded-b-full" />}
+            <i className="fas fa-mountain text-lg leading-none"></i>
+            <span className="text-[10px] font-semibold tracking-wide uppercase">Stays</span>
+          </Link>
+
+          {/* WhatsApp — centre */}
+          <a
+            href={`https://wa.me/${whatsappNumber}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 flex flex-col items-center justify-center gap-1.5 py-3 transition-all duration-200 relative text-white"
+          >
+            <span className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-[3px] rounded-b-full" style={{ backgroundColor: '#25D366' }} />
+            <i className="fab fa-whatsapp text-lg leading-none" style={{ color: '#25D366' }}></i>
+            <span className="text-[10px] font-semibold tracking-wide uppercase" style={{ color: '#25D366' }}>Chat</span>
+          </a>
+
+          {/* Explore */}
+          <Link
+            href="/destinations"
+            className={`flex-1 flex flex-col items-center justify-center gap-1.5 py-3 transition-all duration-200 relative ${pathname.startsWith('/destinations') ? 'text-white' : 'text-white/45'}`}
+          >
+            {pathname.startsWith('/destinations') && <span className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-[3px] bg-terracotta rounded-b-full" />}
+            <i className="fas fa-compass text-lg leading-none"></i>
+            <span className="text-[10px] font-semibold tracking-wide uppercase">Explore</span>
+          </Link>
+
+          {/* Plan */}
+          <Link
+            href="/plan-your-trip"
+            className={`flex-1 flex flex-col items-center justify-center gap-1.5 py-3 transition-all duration-200 relative ${pathname === '/plan-your-trip' ? 'text-white' : 'text-white/45'}`}
+          >
+            {pathname === '/plan-your-trip' && <span className="absolute top-0 left-1/2 -translate-x-1/2 w-10 h-[3px] bg-terracotta rounded-b-full" />}
+            <i className="fas fa-map-marked-alt text-lg leading-none"></i>
+            <span className="text-[10px] font-semibold tracking-wide uppercase">Plan</span>
+          </Link>
+
+        </div>
       </nav>
-    </div>
+
+      {/* Scrollable page content */}
+      <div className="min-h-screen flex flex-col selection:bg-forest selection:text-white">
+        <main className={`flex-grow relative ${isHome ? '' : 'pt-16 lg:pt-20'} pb-24 lg:pb-0`}>
+          {children}
+        </main>
+        <Footer />
+      </div>
+    </>
   );
 };

@@ -12,6 +12,7 @@ import { getDestinationBySlug, getHotelsByDestination, getBlogsByDestination } f
 import { DestinationTabs } from '@/components/DestinationTabs';
 import { motion } from 'framer-motion';
 import { MotionDiv } from '@/components/MotionDiv';
+import { SITE_URL, SITE_NAME } from '../../../lib/constants';
 
 // Revalidate every hour
 export const revalidate = 3600;
@@ -95,7 +96,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
             images: image ? [image] : [],
         },
         alternates: {
-            canonical: `https://escapestayz.com/destinations/${dest.slug}`,
+            canonical: `${SITE_URL}/destinations/${dest.slug}`,
         }
     };
 }
@@ -121,9 +122,9 @@ export default async function DestinationDetailPage({ params }: { params: Promis
         "@context": "https://schema.org",
         "@type": "BreadcrumbList",
         "itemListElement": [
-            { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://escapestayz.com/" },
-            { "@type": "ListItem", "position": 2, "name": "Destinations", "item": "https://escapestayz.com/destinations" },
-            { "@type": "ListItem", "position": 3, "name": dest.name, "item": `https://escapestayz.com/destinations/${dest.slug}` }
+            { "@type": "ListItem", "position": 1, "name": "Home", "item": `${SITE_URL}/` },
+            { "@type": "ListItem", "position": 2, "name": "Destinations", "item": `${SITE_URL}/destinations` },
+            { "@type": "ListItem", "position": 3, "name": dest.name, "item": `${SITE_URL}/destinations/${dest.slug}` }
         ]
     };
 

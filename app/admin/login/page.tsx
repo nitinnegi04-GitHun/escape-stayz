@@ -1,20 +1,33 @@
-
 'use client';
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { supabase } from '@/lib/supabase';
 
 export default function AdminLoginPage() {
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const router = useRouter();
 
-    const handleBypass = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
-        // Directly navigate to dashboard
-        setTimeout(() => {
+        setError(null);
+
+        const { error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+        });
+
+        if (error) {
+            setError(error.message);
+            setLoading(false);
+        } else {
             router.push('/admin');
-        }, 500);
+            router.refresh();
+        }
     };
 
     return (
@@ -32,19 +45,49 @@ export default function AdminLoginPage() {
                     <p className="text-white/30 text-[9px] font-bold uppercase tracking-[0.4em]">Administrative Gateway</p>
                 </div>
 
-                <div className="bg-white/[0.03] backdrop-blur-3xl border border-white/10 p-10 rounded-3xl shadow-2xl">
-                    <div className="text-center mb-8">
-                        <p className="text-sm text-white/60 font-light mb-6">Direct administrative access is currently enabled for development.</p>
+                <form onSubmit={handleLogin} className="bg-white/[0.03] backdrop-blur-3xl border border-white/10 p-10 rounded-3xl shadow-2xl">
+                    <div className="mb-4">
+                        <label className="block text-white/60 text-xs font-bold uppercase tracking-wider mb-2">Email Address</label>
+                        <input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:border-terracotta focus:ring-1 focus:ring-terracotta transition-all"
+                            placeholder="admin@example.com"
+                            required
+                        />
+                    </div>
+                    
+                    <div className="mb-8">
+                        <label className="block text-white/60 text-xs font-bold uppercase tracking-wider mb-2">Password</label>
+                        <input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-white/20 focus:outline-none focus:border-terracotta focus:ring-1 focus:ring-terracotta transition-all"
+                            placeholder="••••••••"
+                            required
+                        />
                     </div>
 
+                    {error && (
+                        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-200 text-sm text-center">
+                            {error}
+                        </div>
+                    )}
+
                     <button
-                        onClick={handleBypass}
+                        type="submit"
                         disabled={loading}
-                        className="w-full bg-forest text-white py-5 rounded-2xl font-bold text-xs uppercase tracking-[0.2em] shadow-xl hover:bg-forest/80 active:scale-[0.98] transition-all disabled:opacity-50"
+                        className="w-full flex items-center justify-center gap-3 bg-forest text-white py-4 rounded-xl font-bold text-xs uppercase tracking-[0.2em] shadow-xl hover:bg-forest/80 active:scale-[0.98] transition-all disabled:opacity-50"
                     >
-                        {loading ? 'Initializing Console...' : 'Enter Admin Portal'}
+                        {loading ? (
+                            <><i className="fas fa-circle-notch fa-spin"></i> Authenticating...</>
+                        ) : (
+                            <><i className="fas fa-lock"></i> Secure Login</>
+                        )}
                     </button>
-                </div>
+                </form>
 
                 <p className="text-center text-white/20 text-[8px] font-bold uppercase tracking-widest mt-12">
                     Secure Internal Environment • Escape Stayz
