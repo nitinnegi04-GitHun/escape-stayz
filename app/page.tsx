@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { cache } from "react";
+import dynamic from 'next/dynamic';
 import { supabase } from "../lib/supabase";
 import { getDestinations } from "../lib/queries";
 import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from "../lib/constants";
@@ -9,7 +10,11 @@ import { StorySection } from "../components/StorySection";
 import { PropertiesSection } from "../components/PropertiesSection";
 import { FeaturedDestinations } from "../components/FeaturedDestinations";
 import { CTASection } from "../components/CTASection";
-import { DirectBookingPopup } from "../components/PropertyClientSections";
+
+const DirectBookingPopup = dynamic(
+    () => import('../components/DirectBookingPopup').then(m => ({ default: m.DirectBookingPopup })),
+    { ssr: false }
+);
 
 // Revalidate every hour
 export const revalidate = 3600;
@@ -46,6 +51,24 @@ const getSections = cache(async (pageId: string) => {
     return sections || [];
   } catch (e) {
     console.error("Network error fetching sections:", e);
+    return [];
+  }
+});
+
+const getHotels = cache(async () => {
+  try {
+    const { data } = await supabase
+      .from('hotels')
+      .select(`
+        *,
+        images:hotel_images(image_url, alt_text),
+        rooms(price_per_night),
+        hotel_amenities(amenity:amenities(name, icon)),
+        highlights
+      `)
+      .limit(6);
+    return data || [];
+  } catch (e) {
     return [];
   }
 });
@@ -92,6 +115,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function HomePage() {
   const page = await getPageData();
   const destinations = await getDestinations();
+  const hotels = await getHotels();
 
   if (!page) {
     return (
@@ -130,7 +154,7 @@ export default async function HomePage() {
     <Layout>
       <Hero {...heroContent} />
       <StorySection {...getSection("story")} />
-      <PropertiesSection {...getSection("properties")} />
+      <PropertiesSection {...getSection("properties")} hotels={hotels} />
       <FeaturedDestinations
         {...getSection("destinations")}
         destinations={destinations}

@@ -1,48 +1,21 @@
 'use client';
 
 import React from 'react';
-import Link from 'next/link';
-
-
-import { supabase } from '../lib/supabase';
-import { useEffect, useState } from 'react';
 import { HotelCard } from './HotelCard';
 
 interface PropertiesSectionProps {
     heading?: string;
     sub_heading?: string;
     description?: string;
+    hotels?: any[];
 }
 
 export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
     heading = "Our Properties",
     sub_heading = "Our Collections",
-    description = "Explore our handpicked selection of luxury stays, from serene mountain retreats to vibrant coastal escapes, each offering a unique immersion into local heritage."
+    description = "Explore our handpicked selection of luxury stays, from serene mountain retreats to vibrant coastal escapes, each offering a unique immersion into local heritage.",
+    hotels = [],
 }) => {
-    const [hotels, setHotels] = useState<any[]>([]); // Using any[] to bypass strict type mismatch for now
-    const [loading, setLoading] = useState(true);
-
-    useEffect(() => {
-        const fetchHotels = async () => {
-            const { data } = await supabase
-                .from('hotels')
-                .select(`
-                    *,
-                    images:hotel_images(image_url, alt_text),
-                    rooms(price_per_night),
-                    hotel_amenities(
-                        amenity:amenities(name, icon)
-                    ),
-                    highlights
-                `)
-                .limit(6);
-
-            if (data) setHotels(data);
-            setLoading(false);
-        };
-        fetchHotels();
-    }, []);
-
     const scrollRef = React.useRef<HTMLDivElement>(null);
 
     const scroll = (direction: 'left' | 'right') => {
@@ -56,7 +29,7 @@ export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
         }
     };
 
-    if (loading) return <div className="py-14 text-center">Loading Properties...</div>;
+    if (!hotels || hotels.length === 0) return null;
 
     return (
         <section id="properties" className="py-14 px-6 md:px-12 bg-white relative overflow-x-hidden">
@@ -69,10 +42,9 @@ export const PropertiesSection: React.FC<PropertiesSectionProps> = ({
                 </div>
 
                 <div className="relative group/nav overflow-x-hidden md:overflow-visible">
-
-                    <div 
+                    <div
                         ref={scrollRef}
-                        className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10 pb-12 pt-4 snap-x snap-mandatory scrollbar-hide" 
+                        className="flex overflow-x-auto md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10 pb-12 pt-4 snap-x snap-mandatory scrollbar-hide"
                         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                     >
                         {hotels.map((hotel, index) => (
