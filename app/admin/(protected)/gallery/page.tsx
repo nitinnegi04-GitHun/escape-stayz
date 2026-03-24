@@ -211,16 +211,32 @@ export default function AdminGalleryPage() {
                 if (upErr) throw upErr;
 
                 const { data: { publicUrl } } = supabase.storage.from('gallery').getPublicUrl(path);
-                await supabase.from('gallery_images').insert([{
-                    folder_id: currentFolder.id,
-                    storage_path: path,
-                    public_url: publicUrl,
-                    title: file.name.split('.')[0],
-                    alt_text: `Escape Stayz ${currentFolder.name}`,
-                    description: '',
-                    tags: currentFolder.name,
-                    media_type: isVideo ? 'video' : 'image'
-                }]);
+
+                const res = await fetch('/api/admin/gallery', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        folder_id: currentFolder.id,
+                        storage_path: path,
+                        public_url: publicUrl,
+                        title: file.name.split('.')[0],
+                        alt_text: `Escape Stayz ${currentFolder.name}`,
+                        description: '',
+                        tags: currentFolder.name,
+                        media_type: isVideo ? 'video' : 'image',
+                    }),
+                });
+                if (!res.ok) {
+                    let errorMessage = `Server responded with status ${res.status}`;
+                    try {
+                        const { error } = await res.json();
+                        if (error) errorMessage = error;
+                    } catch (e) {
+                         const text = await res.text();
+                         errorMessage = text.substring(0, 100);
+                    }
+                    throw new Error(errorMessage);
+                }
 
                 count++;
                 setUploadProgress(Math.round((count / files.length) * 100));
@@ -235,6 +251,7 @@ export default function AdminGalleryPage() {
 
         setIsUploading(false);
         fetchImages(currentFolder.id);
+        if (fileInputRef.current) fileInputRef.current.value = '';
     };
 
     const getFileFormat = (url: string) => {
