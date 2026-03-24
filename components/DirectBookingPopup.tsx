@@ -1,18 +1,20 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSettings } from '../context/SettingsContext';
 
 const COUNT_KEY = 'escape_stayz_booking_popup_count';
 const MAX_SHOWS = 2;
+const DELAY_MS = 30_000; // 30 seconds
 
 export const DirectBookingPopup: React.FC = () => {
     const [isVisible, setIsVisible] = useState(false);
     const { settings } = useSettings();
+    const secondTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
     useEffect(() => {
-        // Detect a full page refresh — reset the counter so the 3-show limit restarts
+        // Detect a full page refresh — reset the counter so the show limit restarts
         const navEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming | undefined;
         if (navEntry?.type === 'reload') {
             sessionStorage.removeItem(COUNT_KEY);
@@ -21,15 +23,33 @@ export const DirectBookingPopup: React.FC = () => {
         const count = parseInt(sessionStorage.getItem(COUNT_KEY) || '0', 10);
         if (count >= MAX_SHOWS) return;
 
+        // First appearance: 30 seconds after page load
         const timer = setTimeout(() => {
             setIsVisible(true);
             sessionStorage.setItem(COUNT_KEY, String(count + 1));
-        }, 5000);
+        }, DELAY_MS);
 
         return () => clearTimeout(timer);
     }, []);
 
-    const dismiss = () => setIsVisible(false);
+    const dismiss = () => {
+        setIsVisible(false);
+
+        // Schedule second appearance 30 seconds after the first is dismissed
+        const count = parseInt(sessionStorage.getItem(COUNT_KEY) || '0', 10);
+        if (count < MAX_SHOWS) {
+            secondTimerRef.current = setTimeout(() => {
+                setIsVisible(true);
+                sessionStorage.setItem(COUNT_KEY, String(count + 1));
+            }, DELAY_MS);
+        }
+    };
+
+    useEffect(() => {
+        return () => {
+            if (secondTimerRef.current) clearTimeout(secondTimerRef.current);
+        };
+    }, []);
 
     const phone = settings?.contact?.phone?.replace(/[^0-9]/g, '') || '918448048862';
     const whatsappLink = `https://wa.me/${phone}?text=${encodeURIComponent('Hi! I\'d like to enquire about direct booking rates.')}`;

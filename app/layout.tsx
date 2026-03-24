@@ -1,8 +1,23 @@
 import './globals.css';
 import React from 'react';
+import { Outfit, Inter } from 'next/font/google';
 import { Providers } from './providers';
 import { Metadata } from 'next';
 import { SITE_URL, SITE_NAME, SITE_DESCRIPTION, SITE_OG_IMAGE, SITE_LOGO } from '../lib/constants';
+
+const outfit = Outfit({
+    subsets: ['latin'],
+    weight: ['300', '400', '500', '600', '700', '800'],
+    variable: '--font-heading',
+    display: 'swap',
+});
+
+const inter = Inter({
+    subsets: ['latin'],
+    weight: ['300', '400', '500', '600'],
+    variable: '--font-body',
+    display: 'swap',
+});
 
 export const metadata: Metadata = {
     metadataBase: new URL(SITE_URL),
@@ -69,21 +84,8 @@ export default function RootLayout({
     };
 
     return (
-        <html lang="en">
+        <html lang="en" className={`${outfit.variable} ${inter.variable}`}>
             <head>
-                <link
-                    rel="stylesheet"
-                    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-                    media="print"
-                    // @ts-ignore
-                    onLoad="this.media='all'"
-                />
-                <noscript>
-                    <link
-                        rel="stylesheet"
-                        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-                    />
-                </noscript>
                 <script
                     type="application/ld+json"
                     dangerouslySetInnerHTML={{ __html: JSON.stringify([organizationSchema, websiteSchema]) }}

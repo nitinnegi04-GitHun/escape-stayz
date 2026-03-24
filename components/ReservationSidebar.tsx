@@ -3,15 +3,13 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useSettings } from '../context/SettingsContext';
-import { Button } from './ui/Button';
 
 interface ReservationSidebarProps {
     hotelName: string;
     location: string;
-    pricePerNight?: number;
 }
 
-export const ReservationSidebar: React.FC<ReservationSidebarProps> = ({ hotelName, location, pricePerNight }) => {
+export const ReservationSidebar: React.FC<ReservationSidebarProps> = ({ hotelName, location }) => {
     const { settings } = useSettings();
     const [currentDate, setCurrentDate] = useState(new Date());
     const [checkInDate, setCheckInDate] = useState<Date | null>(null);
@@ -74,11 +72,10 @@ export const ReservationSidebar: React.FC<ReservationSidebarProps> = ({ hotelNam
         const isToday = isSameDay(date, new Date());
 
         days.push(
-            <motion.button
+            <button
                 key={i}
-                whileTap={{ scale: 0.9 }}
                 onClick={() => handleDateClick(i)}
-                className={`h-8 w-8 rounded-full text-xs font-medium flex items-center justify-center transition-all duration-200 relative
+                className={`h-8 w-8 rounded-full text-xs font-medium flex items-center justify-center transition-all duration-200 relative active:scale-90
                     ${(isCheckIn || isCheckOut) ? 'bg-terracotta-gradient text-white shadow-md scale-110 z-10' : ''}
                     ${isInRange ? 'bg-terracotta/10 text-terracotta rounded-none' : ''}
                     ${!isCheckIn && !isCheckOut && !isInRange ? 'hover:bg-forest/5 text-charcoal' : ''}
@@ -86,7 +83,7 @@ export const ReservationSidebar: React.FC<ReservationSidebarProps> = ({ hotelNam
                 `}
             >
                 {i}
-            </motion.button>
+            </button>
         );
     }
 
@@ -145,21 +142,19 @@ export const ReservationSidebar: React.FC<ReservationSidebarProps> = ({ hotelNam
                         <span className="font-heading font-bold text-sm">Over 12 Years</span>
                     </div>
                     <div className="flex items-center gap-3 bg-white rounded-xl px-2 py-1 shadow-sm border border-forest/5">
-                        <motion.button
-                            whileTap={{ scale: 0.8 }}
+                        <button
                             onClick={() => setAdults(Math.max(1, adults - 1))}
-                            className="w-6 h-6 flex items-center justify-center text-charcoal/40 hover:text-terracotta transition-colors"
+                            className="w-6 h-6 flex items-center justify-center text-charcoal/40 hover:text-terracotta transition-colors active:scale-75"
                         >
                             <i className="fas fa-minus text-[10px]"></i>
-                        </motion.button>
+                        </button>
                         <span className="font-bold text-charcoal w-4 text-center">{adults}</span>
-                        <motion.button
-                            whileTap={{ scale: 0.8 }}
+                        <button
                             onClick={() => setAdults(adults + 1)}
-                            className="w-6 h-6 flex items-center justify-center text-charcoal/40 hover:text-forest transition-colors"
+                            className="w-6 h-6 flex items-center justify-center text-charcoal/40 hover:text-forest transition-colors active:scale-75"
                         >
                             <i className="fas fa-plus text-[10px]"></i>
-                        </motion.button>
+                        </button>
                     </div>
                 </div>
 
@@ -170,21 +165,19 @@ export const ReservationSidebar: React.FC<ReservationSidebarProps> = ({ hotelNam
                         <span className="font-heading font-bold text-sm">Over 9 Years</span>
                     </div>
                     <div className="flex items-center gap-3 bg-white rounded-xl px-2 py-1 shadow-sm border border-forest/5">
-                        <motion.button
-                            whileTap={{ scale: 0.8 }}
+                        <button
                             onClick={() => setChildren(Math.max(0, children - 1))}
-                            className="w-6 h-6 flex items-center justify-center text-charcoal/40 hover:text-terracotta transition-colors"
+                            className="w-6 h-6 flex items-center justify-center text-charcoal/40 hover:text-terracotta transition-colors active:scale-75"
                         >
                             <i className="fas fa-minus text-[10px]"></i>
-                        </motion.button>
+                        </button>
                         <span className="font-bold text-charcoal w-4 text-center">{children}</span>
-                        <motion.button
-                            whileTap={{ scale: 0.8 }}
+                        <button
                             onClick={() => setChildren(children + 1)}
-                            className="w-6 h-6 flex items-center justify-center text-charcoal/40 hover:text-forest transition-colors"
+                            className="w-6 h-6 flex items-center justify-center text-charcoal/40 hover:text-forest transition-colors active:scale-75"
                         >
                             <i className="fas fa-plus text-[10px]"></i>
-                        </motion.button>
+                        </button>
                     </div>
                 </div>
             </div>

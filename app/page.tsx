@@ -9,7 +9,7 @@ import { StorySection } from "../components/StorySection";
 import { PropertiesSection } from "../components/PropertiesSection";
 import { FeaturedDestinations } from "../components/FeaturedDestinations";
 import { CTASection } from "../components/CTASection";
-import { DirectBookingPopup } from "../components/DirectBookingPopup";
+import { DirectBookingPopup } from "../components/PropertyClientSections";
 
 // Revalidate every hour
 export const revalidate = 3600;

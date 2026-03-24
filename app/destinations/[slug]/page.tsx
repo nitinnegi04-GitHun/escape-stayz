@@ -8,11 +8,11 @@ import { Layout } from '../../../components/Layout';
 import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { Button } from '../../../components/ui/Button';
 import { DestinationGallery } from '../../../components/DestinationGallery';
-import { FAQSection } from '../../../components/FAQSection';
 import { getDestinationBySlug, getHotelsByDestination, getBlogsByDestination } from '../../../lib/queries';
 import { DestinationTabs } from '@/components/DestinationTabs';
-import { motion } from 'framer-motion';
-import { MotionDiv } from '@/components/MotionDiv';
+import dynamic from 'next/dynamic';
+
+const FAQSection = dynamic(() => import('../../../components/FAQSection').then(m => ({ default: m.FAQSection })));
 import { SITE_URL, SITE_NAME } from '../../../lib/constants';
 
 // Revalidate every hour

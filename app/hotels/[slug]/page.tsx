@@ -8,16 +8,17 @@ import { Breadcrumbs } from '../../../components/Breadcrumbs';
 import { RoomCarousel } from '../../../components/RoomCarousel';
 import { ReservationSidebar } from '../../../components/ReservationSidebar';
 import { HotelGallery } from '../../../components/HotelGallery';
-import { FAQSection } from '../../../components/FAQSection';
 import { FadeIn } from '../../../components/ui/FadeIn';
 import { getHotelBySlug, getExperiencesByDestinationSlug } from '../../../lib/queries';
 import { supabase } from '../../../lib/supabase';
 import { PropertyTabs } from '@/components/PropertyTabs';
 import { HOTEL_ICON_MAP } from '@/components/Admin/hotelIcons';
-import { DirectBookingPopup } from '@/components/DirectBookingPopup';
-import { OtherPropertiesSection } from '@/components/OtherPropertiesSection';
 import { SITE_URL, SITE_NAME } from '../../../lib/constants';
-import { ExperiencesCarousel } from '../../../components/ExperiencesCarousel';
+import { LazyMap } from '../../../components/LazyMap';
+import dynamic from 'next/dynamic';
+import { DirectBookingPopup, OtherPropertiesSection, ExperiencesCarousel } from '../../../components/PropertyClientSections';
+
+const FAQSection = dynamic(() => import('../../../components/FAQSection').then(m => ({ default: m.FAQSection })));
 
 // Revalidate every hour
 export const revalidate = 3600;
@@ -246,20 +247,10 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
                         <FadeIn delay={0.4} id="location" className="mb-12 lg:mb-16 scroll-mt-24 lg:scroll-mt-40">
                             <h3 className="text-xl lg:text-2xl font-bold text-forest mb-6 lg:mb-8 font-heading">Location & Geography</h3>
                             <div className="rounded-3xl overflow-hidden shadow-2xl border border-white/20 h-[280px] md:h-[500px] bg-white/10 backdrop-blur-3xl relative group p-2">
-                                <div className="w-full h-full rounded-2xl overflow-hidden relative">
-                                    <iframe
-                                        title={`${hotelName} Location Map`}
-                                        width="100%"
-                                        height="100%"
-                                        frameBorder="0"
-                                        style={{ border: 0, filter: 'contrast(1.1) opacity(0.9) grayscale(0.2)' }}
-                                        src={hotel.google_maps_embed_url || `https://www.google.com/maps?q=${lat},${lng}&hl=en;z=14&output=embed`}
-                                        allowFullScreen
-                                        loading="lazy"
-                                        className="w-full h-full"
-                                    ></iframe>
-                                    <div className="absolute inset-0 pointer-events-none ring-1 ring-inset ring-charcoal/10 rounded-2xl"></div>
-                                </div>
+                                <LazyMap
+                                    title={`${hotelName} Location Map`}
+                                    src={hotel.google_maps_embed_url || `https://www.google.com/maps?q=${lat},${lng}&hl=en;z=14&output=embed`}
+                                />
 
                                 {/* Overlay Card */}
                                 <div className="absolute bottom-6 right-6 pointer-events-auto">

@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform } from 'framer-motion';
 import { ImageGalleryModal } from './ImageGalleryModal';
 import { Button } from './ui/Button';
 import { useSettings } from '../context/SettingsContext';
@@ -28,20 +27,11 @@ interface RoomProps {
 export const RoomCard: React.FC<RoomProps> = ({ room, hotelName }) => {
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const [isGalleryOpen, setIsGalleryOpen] = useState(false);
-    const cardRef = useRef<HTMLDivElement>(null);
     const { settings } = useSettings();
 
     const phone = settings?.contact?.phone?.replace(/\D/g, '') || '';
     const message = `Hi Team, would Like to Know More about ${room.name} ${hotelName ? `at ${hotelName}` : ''}`;
     const whatsappLink = phone ? `https://wa.me/${phone}?text=${encodeURIComponent(message)}` : '#';
-
-    const { scrollYProgress } = useScroll({
-        target: cardRef,
-        offset: ["start end", "end start"]
-    });
-
-    // Parallax effect for the image: moves it slightly slower than the scroll
-    const yParallax = useTransform(scrollYProgress, [0, 1], ["-10%", "10%"]);
 
     const placeholder = 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?fm=webp&w=800';
 
@@ -83,8 +73,7 @@ export const RoomCard: React.FC<RoomProps> = ({ room, hotelName }) => {
                 initialIndex={currentImageIndex}
             />
 
-            <motion.div
-                ref={cardRef}
+            <div
                 className="flex flex-col group items-stretch bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-forest/5 h-full"
             >
 
@@ -129,13 +118,13 @@ export const RoomCard: React.FC<RoomProps> = ({ room, hotelName }) => {
                                     onClick={(e) => { e.stopPropagation(); prevImage(); }}
                                     className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm text-charcoal shadow-lg hover:bg-white transition-all flex items-center justify-center transform hover:scale-110"
                                 >
-                                    <i className="fas fa-chevron-left text-xs"></i>
+                                    <i className="fas fa-chevron-left text-terracotta text-xs"></i>
                                 </button>
                                 <button
                                     onClick={(e) => { e.stopPropagation(); nextImage(); }}
                                     className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm text-charcoal shadow-lg hover:bg-white transition-all flex items-center justify-center transform hover:scale-110"
                                 >
-                                    <i className="fas fa-chevron-right text-xs"></i>
+                                    <i className="fas fa-chevron-right text-terracotta text-xs"></i>
                                 </button>
                             </div>
                         )}
@@ -243,7 +232,7 @@ export const RoomCard: React.FC<RoomProps> = ({ room, hotelName }) => {
                         </a>
                     </div>
                 </div>
-            </motion.div>
+            </div>
         </>
     );
 };
