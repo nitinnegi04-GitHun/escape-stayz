@@ -53,6 +53,7 @@ export const OtherPropertiesSection: React.FC<OtherPropertiesSectionProps> = ({ 
     const FALLBACK = 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?fm=webp&w=800';
 
     const getImage = (hotel: any) => {
+        if (hotel.thumbnail_image) return hotel.thumbnail_image;
         const fromGallery = hotel.images?.find((img: any) => img.image_url)?.image_url;
         return fromGallery || hotel.hero_image || FALLBACK;
     };
