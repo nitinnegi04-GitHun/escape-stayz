@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import { useSettings } from '../context/SettingsContext';
 
 interface ReservationSidebarProps {
@@ -98,10 +97,7 @@ export const ReservationSidebar: React.FC<ReservationSidebarProps> = ({ hotelNam
     };
 
     return (
-        <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
+        <div
             className="bg-white p-6 lg:p-8 rounded-3xl shadow-2xl shadow-forest/10 border border-forest/5 text-center max-h-[calc(100vh-150px)] overflow-y-auto flex flex-col custom-scrollbar"
         >
             <div className="flex flex-col items-center mb-8">
@@ -191,6 +187,6 @@ export const ReservationSidebar: React.FC<ReservationSidebarProps> = ({ hotelNam
                 <span className="font-bold text-sm uppercase tracking-widest">Send Query on WhatsApp</span>
             </button>
             <p className="text-[9px] font-bold uppercase tracking-widest text-charcoal/30 italic mt-2 pb-0 shrink-0">Direct booking priority ensured</p>
-        </motion.div>
+        </div>
     );
 };

@@ -2,14 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { motion } from 'framer-motion';
-import { HOTELS } from '../constants'; // Or fetch from DB eventually, but this component will likely be replaced by a fetched list.
-// Actually, staying consistent, we should probably fetch hotels here or pass them as props.
-// But for now, let's keep it simple and just extract the UI.
-// Wait, `HOTELS` is being deprecated. We should use `useQuery` here if we want "100% Backend".
-// But `Home.tsx` isn't refactored yet to fetch hotels.
-// I'll keep reusing HOTELS for now, but the Goal "100% Backend" means I should fetch.
-// I will fetching hotels in this component.
+
 
 import { supabase } from '../lib/supabase';
 import { useEffect, useState } from 'react';

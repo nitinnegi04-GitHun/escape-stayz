@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
 import { ReservationSidebar } from './ReservationSidebar';
 
@@ -33,47 +32,42 @@ export const MobileReservationPopup: React.FC<MobileReservationPopupProps> = ({ 
 
     const dismiss = () => setIsVisible(false);
 
+    if (!isVisible) return null;
+
     return (
-        <AnimatePresence>
-            {isVisible && (
-                <>
-                    {/* Backdrop */}
-                    <motion.div
-                        key="backdrop"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999] lg:hidden"
+        <>
+            {/* Backdrop */}
+            <div
+                className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[999] lg:hidden animate-fade-in"
+                onClick={dismiss}
+            />
+
+            {/* Drawer sliding up from bottom */}
+            <div
+                className="fixed bottom-0 left-0 right-0 z-[1000] lg:hidden max-h-[90vh] overflow-y-auto rounded-t-3xl shadow-2xl animate-slide-up"
+            >
+                {/* Drag handle + close */}
+                <div className="bg-white rounded-t-3xl px-6 pt-4 pb-2 flex items-center justify-between sticky top-0 z-10 border-b border-forest/5">
+                    <div className="w-10 h-1 bg-charcoal/20 rounded-full mx-auto absolute left-1/2 -translate-x-1/2 top-3" />
+                    <div /> {/* spacer */}
+                    <button
                         onClick={dismiss}
-                    />
-
-                    {/* Drawer sliding up from bottom */}
-                    <motion.div
-                        key="drawer"
-                        initial={{ y: '100%' }}
-                        animate={{ y: 0 }}
-                        exit={{ y: '100%' }}
-                        transition={{ type: 'spring', damping: 28, stiffness: 300 }}
-                        className="fixed bottom-0 left-0 right-0 z-[1000] lg:hidden max-h-[90vh] overflow-y-auto rounded-t-3xl shadow-2xl"
+                        className="w-8 h-8 flex items-center justify-center rounded-full bg-cream hover:bg-charcoal/10 transition-colors ml-auto"
+                        aria-label="Close"
                     >
-                        {/* Drag handle + close */}
-                        <div className="bg-white rounded-t-3xl px-6 pt-4 pb-2 flex items-center justify-between sticky top-0 z-10 border-b border-forest/5">
-                            <div className="w-10 h-1 bg-charcoal/20 rounded-full mx-auto absolute left-1/2 -translate-x-1/2 top-3" />
-                            <div /> {/* spacer */}
-                            <button
-                                onClick={dismiss}
-                                className="w-8 h-8 flex items-center justify-center rounded-full bg-cream hover:bg-charcoal/10 transition-colors ml-auto"
-                                aria-label="Close"
-                            >
-                                <i className="fas fa-xmark text-charcoal/50 text-sm"></i>
-                            </button>
-                        </div>
+                        <i className="fas fa-xmark text-charcoal/50 text-sm"></i>
+                    </button>
+                </div>
 
-                        <ReservationSidebar hotelName={hotelName} location={location} />
-                    </motion.div>
-                </>
-            )}
-        </AnimatePresence>
+                <ReservationSidebar hotelName={hotelName} location={location} />
+            </div>
+
+            <style>{`
+                @keyframes fade-in { from { opacity: 0 } to { opacity: 1 } }
+                @keyframes slide-up { from { transform: translateY(100%) } to { transform: translateY(0) } }
+                .animate-fade-in { animation: fade-in 0.3s ease forwards; }
+                .animate-slide-up { animation: slide-up 0.35s cubic-bezier(0.25,0.46,0.45,0.94) forwards; }
+            `}</style>
+        </>
     );
 };

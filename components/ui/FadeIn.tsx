@@ -1,7 +1,5 @@
 'use client';
-// Client component for fade animations
 
-import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
 
 interface FadeInProps {
@@ -13,15 +11,16 @@ interface FadeInProps {
 
 export const FadeIn = ({ children, delay = 0, className = '', id }: FadeInProps) => {
     return (
-        <motion.div
+        <div
             id={id}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.8, ease: 'easeOut', delay }}
-            className={className}
+            className={`fade-in-view ${className}`}
+            style={{ animationDelay: `${delay}s` }}
         >
             {children}
-        </motion.div>
+            <style>{`
+                @keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+                .fade-in-view { animation: fadeInUp 0.8s ease-out both; }
+            `}</style>
+        </div>
     );
 };
