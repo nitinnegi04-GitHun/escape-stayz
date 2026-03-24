@@ -1,6 +1,5 @@
 import { Metadata } from "next";
 import { cache } from "react";
-import dynamic from 'next/dynamic';
 import { supabase } from "../lib/supabase";
 import { getDestinations } from "../lib/queries";
 import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from "../lib/constants";
@@ -10,11 +9,7 @@ import { StorySection } from "../components/StorySection";
 import { PropertiesSection } from "../components/PropertiesSection";
 import { FeaturedDestinations } from "../components/FeaturedDestinations";
 import { CTASection } from "../components/CTASection";
-
-const DirectBookingPopup = dynamic(
-    () => import('../components/DirectBookingPopup').then(m => ({ default: m.DirectBookingPopup })),
-    { ssr: false }
-);
+import DirectBookingPopupClient from "../components/DirectBookingPopupClient";
 
 // Revalidate every hour
 export const revalidate = 3600;
@@ -160,7 +155,7 @@ export default async function HomePage() {
         destinations={destinations}
       />
       <CTASection {...ctaContent} />
-      <DirectBookingPopup />
+      <DirectBookingPopupClient />
     </Layout>
   );
 }
