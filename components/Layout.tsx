@@ -248,8 +248,7 @@ const Footer = () => {
         <div>
           <h4 className="font-heading text-xl mb-8">Guest Care</h4>
           <ul className="space-y-4 text-white/50 text-sm">
-            <li><Link href="/contact" className="hover:text-white transition-colors">Get in Touch</Link></li>
-            <li><Link href="/admin" className="hover:text-terracotta transition-colors font-bold text-terracotta/80 uppercase tracking-widest text-[9px]">Staff Portal</Link></li>
+<li><Link href="/admin" className="hover:text-terracotta transition-colors font-bold text-terracotta/80 uppercase tracking-widest text-[9px]">Staff Portal</Link></li>
             <li className="pt-4 space-y-1">
               <p className="text-[10px] text-white/40 font-mono tracking-tighter">{settings.contact.phone}</p>
               <p className="text-[10px] text-white/40 font-mono tracking-tighter">{settings.contact.email}</p>

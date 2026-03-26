@@ -4,7 +4,7 @@ import { HOTELS, DESTINATIONS, BLOG_POSTS } from '../constants';
 const SITE_URL = 'https://escapestayz.com';
 
 export const generateSitemap = () => {
-  const staticPages = ['', '/about', '/hotels', '/destinations', '/gallery', '/plan-your-trip', '/blog', '/contact'];
+  const staticPages = ['', '/hotels', '/destinations', '/plan-your-trip', '/blog'];
   const hotelPages = HOTELS.map(h => `/hotels/${h.slug}`);
   const destPages = DESTINATIONS.map(d => `/destinations/${d.slug}`);
   const blogPages = BLOG_POSTS.map(b => `/blog/${b.slug}`);

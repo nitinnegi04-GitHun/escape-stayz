@@ -170,7 +170,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         "author": [{
             "@type": "Person",
             "name": post.author || "Escape Concierge",
-            "url": `${SITE_URL}/about`
+            "url": SITE_URL
         }],
         "description": post.excerpt,
         "url": `${SITE_URL}/blog/${post.slug}`,
