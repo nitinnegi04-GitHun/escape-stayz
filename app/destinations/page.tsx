@@ -125,7 +125,7 @@ export default async function DestinationsPage() {
                                 {/* Image Section */}
                                 <Link href={`/destinations/${dest.slug}`} className="relative aspect-[4/3] overflow-hidden block">
                                     <Image
-                                        src={dest.image_url || dest.hero_image || '/og-default.jpg'}
+                                        src={dest.image_url || '/og-default.jpg'}
                                         alt={dest.name}
                                         className="object-cover group-hover:scale-110 transition-transform duration-700"
                                         fill
