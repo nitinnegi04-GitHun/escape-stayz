@@ -1,12 +1,13 @@
 import { Metadata } from "next";
 import { cache } from "react";
 import { supabase } from "../lib/supabase";
-import { getDestinations } from "../lib/queries";
+import { getDestinations, getAwards } from "../lib/queries";
 import { SITE_URL, SITE_NAME, SITE_OG_IMAGE } from "../lib/constants";
 import { Layout } from "../components/Layout";
 import { Hero } from "../components/Hero";
 import { StorySection } from "../components/StorySection";
 import { PropertiesSection } from "../components/PropertiesSection";
+import { AwardsSection } from "../components/AwardsSection";
 import { FeaturedDestinations } from "../components/FeaturedDestinations";
 import { CTASection } from "../components/CTASection";
 import DirectBookingPopupClient from "../components/DirectBookingPopupClient";
@@ -113,6 +114,7 @@ export default async function HomePage() {
   const page = await getPageData();
   const destinations = await getDestinations();
   const hotels = await getHotels();
+  const awards = await getAwards().catch(() => []);
 
   if (!page) {
     return (
@@ -152,6 +154,7 @@ export default async function HomePage() {
       <Hero {...heroContent} />
       <StorySection {...getSection("story")} />
       <PropertiesSection {...getSection("properties")} hotels={hotels} />
+      <AwardsSection awards={awards} />
       <FeaturedDestinations
         {...getSection("destinations")}
         destinations={destinations}

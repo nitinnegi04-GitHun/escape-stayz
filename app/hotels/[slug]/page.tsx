@@ -45,7 +45,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
     const title = hotel.meta_title || `${hotel.name} | Luxury Hotel in ${hotel.location_name}`;
     const description = hotel.meta_description || `Experience high-altitude luxury at ${hotel.name}.`;
-    const image = hotel.thumbnail_image || hotel.hero_image || 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb';
+    const image = hotel.thumbnail_image || 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb';
 
     return {
         title,
@@ -105,7 +105,7 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
         "@type": "Hotel",
         "name": hotelName,
         "description": hotel.meta_description,
-        "image": [hotel.thumbnail_image || hotel.hero_image],
+        "image": [hotel.thumbnail_image],
         "url": `${SITE_URL}/hotels/${hotel.slug}`,
         "telephone": "+91-9999999999",
         "priceRange": "$$$",
@@ -152,7 +152,7 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
             <HotelGallery
                 images={hotel.images}
                 hotelName={hotelName}
-                heroImage={hotel.hero_image}
+                heroImage={hotel.thumbnail_image}
             />
 
             <Breadcrumbs items={[{ label: 'Hotels', path: '/hotels' }, { label: hotelName }]} />
@@ -232,7 +232,7 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
                             <FadeIn delay={0.3} className="mb-12 lg:mb-20 scroll-mt-24 lg:scroll-mt-40">
                                 <ExperiencesCarousel
                                     experiences={experiences}
-                                    heroImage={hotel.hero_image}
+                                    heroImage={hotel.thumbnail_image}
                                     recommendedDays={recommendedDays}
                                     destinationName={destinationData?.name}
                                     experiencesWhatsappLink={experiencesWhatsappLink}

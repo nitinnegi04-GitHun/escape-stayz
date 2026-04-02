@@ -12,21 +12,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     const hotelUrls = hotels.map((hotel) => ({
         url: `${SITE_URL}/hotels/${hotel.slug}`,
-        lastModified: new Date(hotel.updated_at || hotel.created_at),
+        lastModified: new Date(hotel.created_at),
         changeFrequency: 'weekly' as const,
         priority: 0.85,
     }))
 
     const destinationUrls = destinations.map((dest) => ({
         url: `${SITE_URL}/destinations/${dest.slug}`,
-        lastModified: new Date(dest.updated_at || dest.created_at),
+        lastModified: new Date(),
         changeFrequency: 'weekly' as const,
         priority: 0.8,
     }))
 
     const postUrls = posts.map((post) => ({
         url: `${SITE_URL}/blog/${post.slug}`,
-        lastModified: new Date(post.updated_at || post.created_at),
+        lastModified: new Date(post.created_at),
         changeFrequency: 'monthly' as const,
         priority: 0.7,
     }))

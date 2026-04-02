@@ -48,6 +48,7 @@ export const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children 
     { label: 'Hotel Fleet', icon: 'hotel', path: '/admin/hotels' },
     { label: 'Amenities', icon: 'star', path: '/admin/amenities' },
     { label: 'Visual Assets', icon: 'images', path: '/admin/gallery' },
+    { label: 'Awards', icon: 'trophy', path: '/admin/awards' },
     { label: 'Blogs', icon: 'feather', path: '/admin/blog' },
     { label: 'Destinations', icon: 'map-location-dot', path: '/admin/destinations' },
     { label: 'Pages', icon: 'file-lines', path: '/admin/pages' },

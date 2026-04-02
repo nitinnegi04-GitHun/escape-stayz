@@ -4,7 +4,7 @@ import { supabase } from './supabase';
 export const getHotels = async (limit = 10, featured = false) => {
   let query = supabase
     .from('hotels')
-    .select('id, name, slug, location_name, destination_slug, thumbnail_image, short_description, featured, highlights, images:hotel_images(image_url, alt_text), rooms(price_per_night)')
+    .select('id, name, slug, location_name, destination_slug, thumbnail_image, short_description, featured, highlights, created_at, images:hotel_images(image_url, alt_text), rooms(price_per_night)')
     .order('created_at', { ascending: false })
     .order('display_order', { foreignTable: 'images', ascending: true });
 
@@ -59,7 +59,7 @@ export const getHotelsByDestination = async (destinationSlug: string) => {
 export const getDestinations = async () => {
   const { data, error } = await supabase
     .from('destinations')
-    .select('id, name, slug, image_url, description, hotel_count')
+    .select('*')
     .order('name');
   if (error) throw error;
   return data;
@@ -106,6 +106,15 @@ export const getExperiencesByDestinationSlug = async (destinationSlug: string) =
     .single();
   if (error) return null;
   return data;
+};
+
+export const getAwards = async () => {
+  const { data, error } = await supabase
+    .from('awards')
+    .select('id, title, image_url, pointers, display_order')
+    .order('display_order', { ascending: true });
+  if (error) throw error;
+  return data || [];
 };
 
 export const getBlogsByDestination = async (destinationSlug: string) => {

@@ -286,7 +286,7 @@ export const Layout: React.FC<{ children: React.ReactNode, title?: string }> = (
 
       {/* Floating WhatsApp Button */}
       <a
-        href={`https://wa.me/${whatsappNumber}`}
+        href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent('Hi Escape Stayz! I would like to know more about your properties.')}`}
         target="_blank"
         rel="noopener noreferrer"
         className="fixed bottom-24 right-6 z-[9999] text-white w-14 h-14 rounded-full hidden lg:flex items-center justify-center shadow-xl hover:scale-110 transition-all duration-300"
@@ -322,7 +322,7 @@ export const Layout: React.FC<{ children: React.ReactNode, title?: string }> = (
 
           {/* WhatsApp — centre */}
           <a
-            href={`https://wa.me/${whatsappNumber}`}
+            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent('Hi Escape Stayz! I would like to know more about your properties.')}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex-1 flex flex-col items-center justify-center gap-1.5 py-3 transition-all duration-200 relative text-white"
