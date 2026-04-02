@@ -59,7 +59,7 @@ export const getHotelsByDestination = async (destinationSlug: string) => {
 export const getDestinations = async () => {
   const { data, error } = await supabase
     .from('destinations')
-    .select('id, name, slug, image_url, description')
+    .select('id, name, slug, image_url, description, hotel_count')
     .order('name');
   if (error) throw error;
   return data;
