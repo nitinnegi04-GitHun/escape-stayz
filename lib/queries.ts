@@ -4,7 +4,7 @@ import { supabase } from './supabase';
 export const getHotels = async (limit = 10, featured = false) => {
   let query = supabase
     .from('hotels')
-    .select('*, images:hotel_images(*), rooms(price_per_night)')
+    .select('id, name, slug, location_name, destination_slug, thumbnail_image, short_description, featured, highlights, images:hotel_images(image_url, alt_text), rooms(price_per_night)')
     .order('created_at', { ascending: false })
     .order('display_order', { foreignTable: 'images', ascending: true });
 
@@ -24,12 +24,17 @@ export const getHotelBySlug = async (slug: string) => {
   const { data, error } = await supabase
     .from('hotels')
     .select(`
-      *,
-      rooms(*, images:room_images(*), room_amenities(amenity:amenities(name, icon))),
-      images:hotel_images(*),
-      hotel_amenities(
-        amenity:amenities(name, icon)
+      id, name, slug, location_name, destination_slug,
+      thumbnail_image, short_description, full_description,
+      meta_title, meta_description, featured, latitude, longitude,
+      google_maps_embed_url, highlights,
+      rooms(
+        *,
+        images:room_images(*),
+        room_amenities(amenity:amenities(name, icon))
       ),
+      images:hotel_images(image_url, alt_text),
+      hotel_amenities(amenity:amenities(name, icon)),
       faqs(*)
     `)
     .order('display_order', { foreignTable: 'rooms.images', ascending: true })
@@ -54,7 +59,7 @@ export const getHotelsByDestination = async (destinationSlug: string) => {
 export const getDestinations = async () => {
   const { data, error } = await supabase
     .from('destinations')
-    .select('*')
+    .select('id, name, slug, image_url, description')
     .order('name');
   if (error) throw error;
   return data;
@@ -77,7 +82,7 @@ export const getDestinationBySlug = async (slug: string) => {
 export const getBlogPosts = async () => {
   const { data, error } = await supabase
     .from('blog_posts')
-    .select('*')
+    .select('id, slug, title, excerpt, featured_image, category, tags, author, created_at, published, destination_slug')
     .order('created_at', { ascending: false });
   if (error) throw error;
   return data;

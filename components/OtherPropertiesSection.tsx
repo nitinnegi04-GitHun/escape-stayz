@@ -3,7 +3,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { supabase } from '../lib/supabase';
 import { HOTEL_ICON_MAP } from './Admin/hotelIcons';
 
 interface OtherPropertiesSectionProps {
@@ -16,23 +15,13 @@ export const OtherPropertiesSection: React.FC<OtherPropertiesSectionProps> = ({ 
     const scrollRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        const fetchHotels = async () => {
-            const { data } = await supabase
-                .from('hotels')
-                .select(`
-                    *,
-                    images:hotel_images(image_url, alt_text),
-                    rooms(price_per_night),
-                    hotel_amenities(amenity:amenities(name, icon)),
-                    highlights
-                `)
-                .neq('slug', currentSlug)
-                .limit(8);
-
-            if (data) setHotels(data);
-            setLoading(false);
-        };
-        fetchHotels();
+        fetch(`/api/other-properties?exclude=${encodeURIComponent(currentSlug)}`)
+            .then(res => res.json())
+            .then(({ hotels }) => {
+                if (hotels) setHotels(hotels);
+                setLoading(false);
+            })
+            .catch(() => setLoading(false));
     }, [currentSlug]);
 
     const scroll = (direction: 'left' | 'right') => {

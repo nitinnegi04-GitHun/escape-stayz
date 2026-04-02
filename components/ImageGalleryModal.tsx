@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 
 export interface GalleryImage {
     url: string;
@@ -72,8 +73,8 @@ export const ImageGalleryModal: React.FC<ImageGalleryModalProps> = ({
 
     if (!isOpen || images.length === 0) return null;
 
-    return (
-        <div className="fixed inset-0 z-[100] bg-black/95 backdrop-blur-sm flex items-center justify-center animate-fadeIn">
+    return createPortal(
+        <div className="fixed inset-0 z-[10000] bg-black flex items-center justify-center animate-fadeIn" style={{ width: '100dvw', height: '100dvh' }}>
 
             {/* Close Button */}
             <button
@@ -166,6 +167,7 @@ export const ImageGalleryModal: React.FC<ImageGalleryModalProps> = ({
                     </div>
                 </div>
             )}
-        </div>
+        </div>,
+        document.body
     );
 };

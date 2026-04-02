@@ -92,8 +92,8 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
         ? 2 + Math.floor((experiences.length - 1) / 3)
         : 0;
 
-    const { data: settingsData } = await supabase.from('site_settings').select('*');
-    const contactInfo = settingsData?.find((s: any) => s.key === 'contact_info')?.value;
+    const { data: settingsData } = await supabase.from('site_settings').select('key, value').eq('key', 'contact_info').limit(1);
+    const contactInfo = settingsData?.[0]?.value;
     const whatsappNumber = contactInfo?.phone?.replace(/\D/g, '') || '';
     const experiencesWhatsappLink = whatsappNumber
         ? `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(`Hi! I'd like to chat with a travel expert about experiences near ${hotelName} in ${location}.`)}`
@@ -160,7 +160,7 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
             <PropertyTabs />
 
             <section className="pb-8 lg:pb-16 pt-6 lg:pt-14 bg-cream">
-                <div className="w-full max-w-[2400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 xl:gap-16">
+                <div className="w-full max-w-[2400px] mx-auto px-4 sm:px-6 md:px-12 lg:px-16 xl:px-24 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-2 xl:gap-4">
 
                     <div className="lg:col-span-8">
                         <div id="overview" className="mb-10 lg:mb-16 scroll-mt-24 lg:scroll-mt-40">
@@ -220,7 +220,7 @@ export default async function HotelDetailPage({ params }: { params: Promise<{ sl
                         </div>
 
                         {hotel.rooms && hotel.rooms.length > 0 && (
-                            <div id="rooms" className="mb-12 lg:mb-20 scroll-mt-24 lg:scroll-mt-40">
+                            <div id="rooms" className="mb-12 lg:mb-20 scroll-mt-24 lg:scroll-mt-40 pb-6">
                                 <FadeIn delay={0.2}>
                                     <RoomCarousel rooms={hotel.rooms} hotelName={hotel.name} />
                                 </FadeIn>

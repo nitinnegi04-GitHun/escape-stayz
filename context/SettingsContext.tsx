@@ -76,37 +76,29 @@ export const SettingsProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     const [settings, setSettings] = useState<SiteSettings>(defaultSettings);
 
     useEffect(() => {
-        const fetchSettings = async () => {
-            try {
-                const { data, error } = await supabase.from('site_settings').select('*');
-                if (error) {
-                    console.error('Error fetching settings:', error);
-                    return;
-                }
-                if (data) {
-                    const newSettings = { ...defaultSettings };
-                    data.forEach(item => {
-                        if (item.key === 'site_identity') {
-                            newSettings.logoUrl = item.value.logoUrl;
-                            newSettings.logoUrl2 = item.value.logoUrl2 || '';
-                            newSettings.siteName = item.value.siteName;
-                        } else if (item.key === 'contact_info') {
-                            newSettings.contact = item.value;
-                        } else if (item.key === 'social_links') {
-                            newSettings.socials = item.value;
-                        } else if (item.key === 'brand_colors') {
-                            newSettings.brandColors = { ...defaultSettings.brandColors, ...item.value };
-                        } else if (item.key === 'brand_fonts') {
-                            newSettings.brandFonts = { ...defaultSettings.brandFonts, ...item.value };
-                        }
-                    });
-                    setSettings(newSettings);
-                }
-            } catch (err) {
-                console.error('Unexpected error fetching settings:', err);
-            }
-        };
-        fetchSettings();
+        fetch('/api/settings')
+            .then(res => res.json())
+            .then(({ data }) => {
+                if (!data) return;
+                const newSettings = { ...defaultSettings };
+                data.forEach((item: { key: string; value: any }) => {
+                    if (item.key === 'site_identity') {
+                        newSettings.logoUrl = item.value.logoUrl;
+                        newSettings.logoUrl2 = item.value.logoUrl2 || '';
+                        newSettings.siteName = item.value.siteName;
+                    } else if (item.key === 'contact_info') {
+                        newSettings.contact = item.value;
+                    } else if (item.key === 'social_links') {
+                        newSettings.socials = item.value;
+                    } else if (item.key === 'brand_colors') {
+                        newSettings.brandColors = { ...defaultSettings.brandColors, ...item.value };
+                    } else if (item.key === 'brand_fonts') {
+                        newSettings.brandFonts = { ...defaultSettings.brandFonts, ...item.value };
+                    }
+                });
+                setSettings(newSettings);
+            })
+            .catch(err => console.error('Unexpected error fetching settings:', err));
     }, []);
 
     const updateSettings = async (newSettings: Partial<SiteSettings>) => {

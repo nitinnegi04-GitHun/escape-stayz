@@ -83,24 +83,28 @@ export const RoomCard: React.FC<RoomProps> = ({ room, hotelName }) => {
                         className="aspect-[5/3] w-full relative cursor-pointer"
                         onClick={() => openGallery(currentImageIndex)}
                     >
-                        {/* Media Display */}
-                        {galleryImages[currentImageIndex].url.match(/\.(mp4|webm|ogg|mov)$/i) ? (
-                            <video
-                                src={galleryImages[currentImageIndex].url}
-                                className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                                muted
-                                loop
-                                onMouseOver={e => e.currentTarget.play()}
-                                onMouseOut={e => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
-                            />
-                        ) : (
-                            <Image
-                                src={galleryImages[currentImageIndex].url || placeholder}
-                                className="object-cover transition-transform duration-1000 group-hover:scale-110"
-                                alt={`${room.name} - View ${currentImageIndex + 1}`}
-                                fill
-                                sizes="(max-width: 768px) 100vw, 33vw"
-                            />
+                        {/* Media Display — all images rendered for instant navigation */}
+                        {galleryImages.map((img, idx) =>
+                            img.url.match(/\.(mp4|webm|ogg|mov)$/i) ? (
+                                <video
+                                    key={idx}
+                                    src={img.url}
+                                    className={`absolute inset-0 w-full h-full object-cover transition-[opacity,transform] duration-300 group-hover:scale-110 ${idx === currentImageIndex ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                                    muted
+                                    loop
+                                    onMouseOver={e => e.currentTarget.play()}
+                                    onMouseOut={e => { e.currentTarget.pause(); e.currentTarget.currentTime = 0; }}
+                                />
+                            ) : (
+                                <Image
+                                    key={idx}
+                                    src={img.url || placeholder}
+                                    className={`object-cover transition-[opacity,transform] duration-300 group-hover:scale-110 ${idx === currentImageIndex ? 'opacity-100' : 'opacity-0'}`}
+                                    alt={`${room.name} - View ${idx + 1}`}
+                                    fill
+                                    sizes="(max-width: 768px) 100vw, 33vw"
+                                />
+                            )
                         )}
 
                         {/* Tag/Badge Overlay (Aligned with Site Style) */}
@@ -113,7 +117,7 @@ export const RoomCard: React.FC<RoomProps> = ({ room, hotelName }) => {
 
                         {/* Navigation Arrows - Standard Size */}
                         {galleryImages.length > 1 && (
-                            <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex items-center justify-between z-10 opacity-50 group-hover:opacity-80 transition-opacity duration-300">
+                            <div className="absolute inset-x-4 top-1/2 -translate-y-1/2 flex items-center justify-between z-10">
                                 <button
                                     onClick={(e) => { e.stopPropagation(); prevImage(); }}
                                     className="w-10 h-10 rounded-full bg-white/95 backdrop-blur-sm text-charcoal shadow-lg hover:bg-white transition-all flex items-center justify-center transform hover:scale-110"
@@ -158,24 +162,24 @@ export const RoomCard: React.FC<RoomProps> = ({ room, hotelName }) => {
 
 
                     {/* Capacity Section - Site Aligned */}
-                    <div className="flex items-center justify-between mb-6 group/capacity">
-                        <div className="flex items-center gap-3">
+                    <div className="flex items-left justify-between mb-6 group/capacity">
+                        <div className="flex items-center gap-2">
                             <div className="w-8 h-8 rounded-full bg-forest/5 flex items-center justify-center shrink-0 transition-colors">
                                 <i className="fas fa-users text-[15px] text-forest/60"></i>
                             </div>
-                            <div className="flex flex-col">
-                                <span className="text-sm font-medium text-terracotta leading-none mb-1">
-                                    Capacity
+                            <div className="flex items-center gap-1.5">
+                                <span className="text-sm font-medium text-terracotta leading-none">
+                                    Capacity:
                                 </span>
-                                <span className="text-[10px]  tracking-wider text-charcoal/40 font-medium">
+                                <span className="text-[12px] font-bold tracking-wider text-charcoal/40">
                                     {room.max_guests}
                                 </span>
                             </div>
                         </div>
                         <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-100/50">
                             <i className="fas fa-ruler-combined text-[15px] text-charcoal/40"></i>
-                            <span className="text-sm font-medium text-terracotta">
-                                sq ft  <span className="text-[10px] uppercase ml-0.5 text-charcoal/60">{room.room_size || '180'}</span>
+                            <span className="text-sm font-bold text-terracotta">
+                                sq ft </span> <span className="text-[12px] uppercase font-bold  text-charcoal/60">{room.room_size || '180'}
                             </span>
                         </div>
                     </div>

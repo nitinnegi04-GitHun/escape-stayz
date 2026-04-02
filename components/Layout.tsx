@@ -4,7 +4,6 @@ import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useSettings } from '../context/SettingsContext';
-import { supabase } from '../lib/supabase';
 import Image from 'next/image';
 import { Button } from './ui/Button';
 
@@ -28,14 +27,14 @@ const Header = () => {
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
 
-    // Fetch navigation data
-    const fetchNavData = async () => {
-      const { data: hotelsData } = await supabase.from('hotels').select('name, slug').order('name');
-      const { data: destsData } = await supabase.from('destinations').select('name, slug').order('name');
-      if (hotelsData) setHotels(hotelsData);
-      if (destsData) setDestinations(destsData);
-    };
-    fetchNavData();
+    // Fetch navigation data — served from /api/nav which has a 1-hour browser cache
+    fetch('/api/nav')
+      .then(res => res.json())
+      .then(({ hotels, destinations }) => {
+        if (hotels) setHotels(hotels);
+        if (destinations) setDestinations(destinations);
+      });
+
 
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);

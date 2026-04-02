@@ -61,6 +61,8 @@ const getHotels = cache(async () => {
         hotel_amenities(amenity:amenities(name, icon)),
         highlights
       `)
+      .order('featured', { ascending: false })
+      .order('created_at', { ascending: false })
       .limit(6);
     return data || [];
   } catch (e) {

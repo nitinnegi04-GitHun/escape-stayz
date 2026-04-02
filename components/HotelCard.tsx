@@ -12,7 +12,7 @@ interface HotelCardProps {
 }
 
 export const HotelCard: React.FC<HotelCardProps> = ({ hotel, index = 0, layout = 'carousel' }) => {
-    
+
     const getMinPrice = (rooms: any[]) => {
         if (!rooms || rooms.length === 0) return 'N/A';
         const prices = rooms.map(r => r.price_per_night).filter(p => p);
@@ -28,7 +28,7 @@ export const HotelCard: React.FC<HotelCardProps> = ({ hotel, index = 0, layout =
         return 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?fm=webp&w=800'; // Fallback
     };
 
-    const containerClasses = layout === 'carousel' 
+    const containerClasses = layout === 'carousel'
         ? "group cursor-pointer border border-forest/5 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white flex flex-col min-w-full md:min-w-[380px] snap-center flex-shrink-0"
         : "group cursor-pointer border border-forest/5 rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 bg-white flex flex-col h-full";
 
@@ -45,7 +45,7 @@ export const HotelCard: React.FC<HotelCardProps> = ({ hotel, index = 0, layout =
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
                 />
-                
+
                 {/* Secondary Image Crossfade */}
                 {hotel.images && hotel.images.length > 1 && (
                     <Image
@@ -56,9 +56,17 @@ export const HotelCard: React.FC<HotelCardProps> = ({ hotel, index = 0, layout =
                         sizes="(max-width: 768px) 100vw, 33vw"
                     />
                 )}
-                
+
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-90 z-20"></div>
-                
+
+                {/* Featured Badge */}
+                {hotel.featured && (
+                    <div className="absolute top-4 left-4 z-40 flex items-center gap-1.5 bg-charcoal  text-white px-3 py-1.5 rounded-full shadow-lg border border-white/10">
+                        <i className="fas fa-star text-terracotta text-[9px]"></i>
+                        <span className="text-[9px] font-bold uppercase tracking-widest">Featured Property</span>
+                    </div>
+                )}
+
                 {/* Quick View Button Hover Overlay */}
                 <div className="absolute inset-0 bg-forest/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-30 flex items-center justify-center pointer-events-none">
                     <span className="bg-white/20 backdrop-blur-md text-white px-6 py-2 rounded-full font-bold uppercase tracking-wider text-xs translate-y-4 group-hover:translate-y-0 transition-all duration-500 shadow-xl border border-white/30 truncate max-w-[80%]">

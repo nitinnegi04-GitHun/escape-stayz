@@ -205,7 +205,8 @@ export default function AdminGalleryPage() {
                 const safeName = uploadFile.name.replace(/\.[^/.]+$/, "").replace(/\W/g, '_').substring(0, 30);
                 const fileExt = uploadFile.name.split('.').pop() || (isVideo ? 'mp4' : 'webp');
                 const filename = `${timestamp}-${uniqueId}-${safeName}.${fileExt}`;
-                const path = `${currentFolder.name}/${filename}`;
+                const safeFolderName = currentFolder.name.replace(/[^a-zA-Z0-9_\-]/g, '_');
+                const path = `${safeFolderName}/${filename}`;
 
                 const { error: upErr } = await supabase.storage.from('gallery').upload(path, uploadFile);
                 if (upErr) throw upErr;

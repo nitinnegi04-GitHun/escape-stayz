@@ -64,7 +64,7 @@ export const RoomCarousel = ({ rooms, hotelName }: { rooms: any[], hotelName?: s
     return (
         <div className="w-full">
             {/* Header / Navigation Controls */}
-            <div className="flex justify-between items-center mb-6 lg:mb-8">
+            <div className="flex justify-between items-center mb-10 lg:mb-12">
                 <div className="flex items-center gap-3">
                     <h3 className="text-xl lg:text-2xl font-bold text-forest mb-6 lg:mb-8 font-heading">
                         Room Details
@@ -100,15 +100,14 @@ export const RoomCarousel = ({ rooms, hotelName }: { rooms: any[], hotelName?: s
                 )}
             </div>
 
-            {/* Carousel Container */}
             <div
                 ref={scrollContainerRef}
                 onScroll={handleScroll}
-                className="flex overflow-x-auto gap-4 lg:gap-8 pb-8  px-4 lg:mx-0 lg:px-0 scrollbar-hide snap-x snap-mandatory"
-                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+                className="flex gap-4 lg:gap-5 overflow-x-auto px-4 lg:mx-0 lg:px-0 scrollbar-hide snap-x snap-mandatory"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', paddingBottom: '32px', marginBottom: '-16px' }}
             >
                 {rooms.map((room) => (
-                    <div key={room.id} className="snap-start shrink-0 w-[80vw] md:w-[60vw] lg:w-[380px] xl:w-[420px]">
+                    <div key={room.id} className="snap-start shrink-0 w-[80vw] md:w-[60vw] lg:w-[380px] xl:w-[420px] flex flex-col">
                         <h4 className="text-base font-bold text-charcoal mb-3 font-heading truncate">{room.name}</h4>
                         <RoomCard room={room} hotelName={hotelName} />
                     </div>

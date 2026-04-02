@@ -20,6 +20,7 @@ export const revalidate = 3600;
 
 const getOptimizedUrl = (url: string | null | undefined, width: number) => {
     if (!url) return '';
+    if (url.startsWith('/')) return url; // local path — no query params
     const separator = url.includes('?') ? '&' : '?';
     return `${url}${separator}fm=webp&w=${width}&q=80`;
 };
@@ -264,7 +265,7 @@ export default async function DestinationDetailPage({ params }: { params: Promis
                                     <Link key={hotel.id} href={`/hotels/${hotel.slug}`} className="group block bg-white rounded-[2.5rem] md:rounded-[3rem] overflow-hidden border border-forest/5 shadow-2xl hover:shadow-forest/10 transition-all duration-700 hover:-translate-y-2">
                                         <div className="aspect-[4/5] md:aspect-[21/9] relative overflow-hidden">
                                             <Image
-                                                src={getOptimizedUrl(hotel.hero_image || hotel.images?.[0]?.image_url, 1200) || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80'}
+                                                src={getOptimizedUrl(hotel.thumbnail_image, 1200) || 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80'}
                                                 className="object-cover transition-transform duration-[1.5s] group-hover:scale-105"
                                                 alt={hotel.name || "Hotel"}
                                                 fill
